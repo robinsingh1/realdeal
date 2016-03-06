@@ -5,8 +5,6 @@ Created on Feb 15, 2016
 '''
 import logging
 from time import localtime, strftime
-
-
                
 KEY_COLUMNS = [
   "realtor_property_id",

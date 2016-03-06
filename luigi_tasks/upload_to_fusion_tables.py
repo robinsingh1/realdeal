@@ -12,16 +12,18 @@ from luigi_tasks.base_task import RealDealBaseTask
 
 
 class UploadToFusionTables(RealDealBaseTask):
-  p12_file = luigi.Parameter()
-  service_account = luigi.Parameter()
-  table_id = luigi.Parameter()
+  fusion_private_key = luigi.Parameter()
+  fusion_service_account = luigi.Parameter()
+  fusion_table_id = luigi.Parameter()
   
   def output(self):
     return self.getLocalFileTarget("properties_uploaded_to_fusion.json")
                     
   def run(self):
     client = FusionTablesClient(
-        self.p12_file, self.service_account, self.table_id)
+        self.fusion_service_account, 
+        self.fusion_private_key, 
+        self.fusion_table_id)
     with self.input().open() as fin, self.output().open('w') as fout:
       properties = json.load(fin)
       client.insertRows(properties)

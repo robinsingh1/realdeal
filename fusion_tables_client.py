@@ -35,10 +35,8 @@ class FusionTablesClient(object):
   service = None
   table_id = None
   
-  def __init__(self, p12_file, service_account, table_id):
+  def __init__(self, service_account, private_key, table_id):
     self.table_id = table_id
-    with open(p12_file) as f:
-      private_key = f.read()
     self.credentials = SignedJwtAssertionCredentials(service_account, 
                                                      private_key, 
                                                      FUSIONT_TABLES_SCOPE)

@@ -13,9 +13,9 @@ from fusion_tables_client import FusionTablesClient
 
 
 class FindNewProperties(RealDealBaseTask):
-  p12_file = luigi.Parameter()
-  service_account = luigi.Parameter()
-  table_id = luigi.Parameter()
+  fusion_private_key = luigi.Parameter()
+  fusion_service_account = luigi.Parameter()
+  fusion_table_id = luigi.Parameter()
   
   __ROW_KEY = "realtor_property_id"
   __client = None
@@ -26,7 +26,9 @@ class FindNewProperties(RealDealBaseTask):
           
   def initializeFusionTable(self):
     self.__client = FusionTablesClient(
-      self.p12_file, self.service_account, self.table_id)
+        self.fusion_service_account, 
+        self.fusion_private_key, 
+        self.fusion_table_id)
     rows = self.__client.getRows(columns=[self.__ROW_KEY])
     for row in rows:
       self.__cached_row_keys.add(row[self.__ROW_KEY])

@@ -20,9 +20,9 @@ class RealDealWorkflow(RealDealBaseTask):
   epoch = luigi.Parameter(
     time.strftime("%Y%m%d-%H%M%S", time.localtime()))
   zillow_api_key = luigi.Parameter(os.environ["REALDEAL_ZILLOW_API_KEY"])
-  p12_file = luigi.Parameter(os.environ["REALDEAL_P12_FILE"])
-  service_account = luigi.Parameter(os.environ["REALDEAL_SERVICE_ACCOUNT"])
-  table_id = luigi.Parameter(os.environ["REALDEAL_FUSION_TABLE_ID"])
+  fusion_private_key = luigi.Parameter(os.environ["REALDEAL_PRIVATE_KEY"])
+  fusion_service_account = luigi.Parameter(os.environ["REALDEAL_SERVICE_ACCOUNT"])
+  fusion_table_id = luigi.Parameter(os.environ["REALDEAL_FUSION_TABLE_ID"])
   
   def requires(self):
     scrape_realtor_task = ScrapeRealtor(
@@ -32,21 +32,21 @@ class RealDealWorkflow(RealDealBaseTask):
         upstream_tasks=scrape_realtor_task,
         base_dir=self.base_dir,
         epoch=self.epoch,
-        p12_file=self.p12_file,
-        service_account=self.service_account,
-        table_id=self.table_id)
+        fusion_service_account=self.fusion_service_account,
+        fusion_private_key=self.fusion_private_key,
+        fusion_table_id=self.fusion_table_id)
     get_zillow_data_task = UpdateZillowData(
         upstream_tasks=find_new_properties_task,
         base_dir=self.base_dir,
         epoch=self.epoch,
-        zillow_api_key=os.environ["REALDEAL_ZILLOW_API_KEY"])
+        zillow_api_key=self.zillow_api_key)
     upload_to_fusion_tables_task = UploadToFusionTables(
         upstream_tasks=get_zillow_data_task,
         base_dir=self.base_dir,
         epoch=self.epoch,
-        p12_file=self.p12_file,
-        service_account=self.service_account,
-        table_id=self.table_id)
+        fusion_service_account=self.fusion_service_account,
+        fusion_private_key=self.fusion_private_key,
+        fusion_table_id=self.fusion_table_id)
     return upload_to_fusion_tables_task
   
   def output(self):
