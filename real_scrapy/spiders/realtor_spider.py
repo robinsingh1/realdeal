@@ -14,12 +14,19 @@ class RealtorSpider(scrapy.Spider):
   name = "realtor"
   allowed_domains = ["realtor.com"]
   start_urls = [
+    "http://www.realtor.com/realestateandhomes-search/Menlo-Park_CA/type-single-family-home/price-na-700000/shw-nl?pgsz=50",            
+    "http://www.realtor.com/realestateandhomes-search/Redwood-City_CA/type-single-family-home/price-na-700000/shw-nl?pgsz=50",
     "http://www.realtor.com/realestateandhomes-search/San-Jose_CA/type-single-family-home/price-na-700000/shw-nl?pgsz=50",
     "http://www.realtor.com/realestateandhomes-search/East-Palo-Alto_CA/type-single-family-home/price-na-700000/shw-nl?pgsz=50",
     "http://www.realtor.com/realestateandhomes-search/Hayward_CA/type-single-family-home/price-na-700000/shw-nl?pgsz=50",
-#     "file:///Users/pitzer/Documents/workspace/real_scrapy/realtor_east_palo_alto.html",
-#     "file:///Users/pitzer/Documents/workspace/real_scrapy/realtor_hayward.html",
-#     "file:///Users/pitzer/Documents/workspace/real_scrapy/realtor_san_jose.html",
+    "http://www.realtor.com/realestateandhomes-search/Fremont_CA/type-single-family-home/price-na-700000/shw-nl?pgsz=50",
+    "http://www.realtor.com/realestateandhomes-search/Union-City_CA/type-single-family-home/price-na-700000/shw-nl?pgsz=50",
+    "http://www.realtor.com/realestateandhomes-search/Milpitas_CA/type-single-family-home/price-na-700000/shw-nl?pgsz=50",
+    "http://www.realtor.com/realestateandhomes-search/Berkeley_CA/type-single-family-home/price-na-700000/shw-nl?pgsz=50",
+    "http://www.realtor.com/realestateandhomes-search/Oakland_CA/type-single-family-home/price-na-700000/shw-nl?pgsz=50",
+#     "file:///Users/pitzer/Documents/workspace/realdeal/realtor_east_palo_alto.html",
+#     "file:///Users/pitzer/Documents/workspace/realdeal/realtor_hayward.html",
+#     "file:///Users/pitzer/Documents/workspace/realdeal/realtor_san_jose.html",
   ]
 
   def parse(self, response):
