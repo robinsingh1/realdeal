@@ -28,7 +28,8 @@ def main():
   zillow = ZillowClient(os.environ["REALDEAL_ZILLOW_API_KEY"])
   
   logging.info("Fetching properties without Zillow data from Fusion Table.")
-  properties = fusion_tables.getRows(columns=FUSION_FIELDS)
+  properties = fusion_tables.getRows(columns=FUSION_FIELDS,
+                                     where={"zillow_id": "24782965"})
   
   logging.info("Updating properties.")
   num_updated_properties = 0
