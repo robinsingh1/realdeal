@@ -38,7 +38,7 @@ pytest-cov==2.2.1
 pytest-flakes==1.0.1
 python-daemon==2.1.1
 python-dateutil==2.4.2
--e https://github.com/pitzer/pyzillow.git#egg=pyzillow
+-e svn+https://github.com/pitzer/pyzillow.git#egg=pyzillow
 queuelib==1.4.2
 ratelim==0.1.6
 requests==2.9.1
