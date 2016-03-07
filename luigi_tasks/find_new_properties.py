@@ -5,7 +5,8 @@ Created on Feb 21, 2016
 '''
 
 import json
-import luigi
+import os
+
 from time import localtime, strftime
 
 from luigi_tasks.base_task import RealDealBaseTask
@@ -13,10 +14,6 @@ from fusion_tables_client import FusionTablesClient
 
 
 class FindNewProperties(RealDealBaseTask):
-  fusion_private_key = luigi.Parameter()
-  fusion_service_account = luigi.Parameter()
-  fusion_table_id = luigi.Parameter()
-  
   __ROW_KEY = "realtor_property_id"
   __client = None
   __cached_row_keys = set()
@@ -25,10 +22,9 @@ class FindNewProperties(RealDealBaseTask):
     return self.getLocalFileTarget("properties_new.json")
           
   def initializeFusionTable(self):
-    self.__client = FusionTablesClient(
-        self.fusion_service_account, 
-        self.fusion_private_key, 
-        self.fusion_table_id)
+    self.__client = FusionTablesClient(os.environ["REALDEAL_SERVICE_ACCOUNT"],
+                                       os.environ["REALDEAL_PRIVATE_KEY"], 
+                                       os.environ["REALDEAL_FUSION_TABLE_ID"])
     rows = self.__client.getRows(columns=[self.__ROW_KEY])
     for row in rows:
       self.__cached_row_keys.add(row[self.__ROW_KEY])
