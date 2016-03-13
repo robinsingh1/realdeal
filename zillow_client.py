@@ -65,6 +65,7 @@ class ZillowClient(object):
     for prop in properties:
       logging.info("address: %s", prop["address"])
       self.rate_limiter.limit()
+      deep_search_response = None
       try:
         deep_search_response = self.zillow_wrapper.get_deep_search_results(
             address=prop["address"], 
@@ -72,32 +73,35 @@ class ZillowClient(object):
             rentzestimate=True)
       except ZillowError as e: 
         logging.error("ZillowError: %s", e.message)
-        continue
-        
-      result = GetDeepSearchResults(deep_search_response)
-  
-      is_updated = False
+      
       updated_prop = copy.deepcopy(prop)
-      for field in ZILLOW_FIELDS:
-        
-        # Map property fields to Zillow fields.
-        if field == "zillow_url":
-          zillow_field = "home_detail_link"
-        else:
-          zillow_field = field
-        
-        old_value = prop.get(field, "")
-        new_value = getattr(result, zillow_field)
-        
-        # Only update fields that have changed.
-        if (new_value != None and str(new_value) != str(old_value)):
-          logging.info("%s: %s -> %s", field, old_value, new_value)
-          updated_prop[field] = new_value
-          is_updated = True 
-              
-      if is_updated:
-        logging.info("Updating: %s", prop["address"])
-        updated_prop["last_update"] = strftime("%Y-%m-%d %H:%M:%S", localtime())
-        updated_prop["zillow_last_update"] = updated_prop["last_update"]
+      
+      if deep_search_response:
+        result = GetDeepSearchResults(deep_search_response)
+        is_updated = False
+        for field in ZILLOW_FIELDS:
+          
+          # Map property fields to Zillow fields.
+          if field == "zillow_url":
+            zillow_field = "home_detail_link"
+          else:
+            zillow_field = field
+          
+          old_value = prop.get(field, "")
+          new_value = getattr(result, zillow_field)
+          
+          # Only update fields that have changed.
+          if (new_value != None and str(new_value) != str(old_value)):
+            logging.info("%s: %s -> %s", field, old_value, new_value)
+            updated_prop[field] = new_value
+            is_updated = True 
+                
+        if is_updated:
+          logging.info("Updating: %s", prop["address"])
+          updated_prop["last_update"] = strftime("%Y-%m-%d %H:%M:%S", localtime())
+          updated_prop["zillow_last_update"] = updated_prop["last_update"]
+      
+      else:
+        logging.error("No Zillow property info found for: %s.", prop["address"])
       
       yield updated_prop

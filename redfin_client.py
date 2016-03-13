@@ -68,26 +68,27 @@ class RedfinClient(object):
       redfin_info = self.getCorePropertyInfo(prop["address"], 
                                              prop["city"],
                                              prop["state"])
-      if not redfin_info:
-        logging.error("No Redfin property info found for: %s.", prop["address"])
-        continue
-    
-      is_updated = False
       updated_prop = copy.deepcopy(prop)
-      for field in REDFIN_FIELDS:
-        old_value = prop.get(field, "")
-        new_value = redfin_info.get(field, "")
-        
-        # Only update fields that have changed.
-        if (new_value != None and str(new_value) != str(old_value)):
-          logging.info("%s: %s -> %s", field, old_value, new_value)
-          updated_prop[field] = new_value
-          is_updated = True 
-              
-      if is_updated:
-        logging.info("Updating: %s", prop["address"])
-        updated_prop["last_update"] = strftime("%Y-%m-%d %H:%M:%S", localtime())
-        updated_prop["redfin_last_update"] = updated_prop["last_update"]
+      
+      if redfin_info:
+        is_updated = False  
+        for field in REDFIN_FIELDS:
+          old_value = prop.get(field, "")
+          new_value = redfin_info.get(field, "")
+          
+          # Only update fields that have changed.
+          if (new_value != None and str(new_value) != str(old_value)):
+            logging.info("%s: %s -> %s", field, old_value, new_value)
+            updated_prop[field] = new_value
+            is_updated = True 
+                
+        if is_updated:
+          logging.info("Updating: %s", prop["address"])
+          updated_prop["last_update"] = strftime("%Y-%m-%d %H:%M:%S", localtime())
+          updated_prop["redfin_last_update"] = updated_prop["last_update"]
+      
+      else:
+        logging.error("No Redfin property info found for: %s.", prop["address"])
       
       yield updated_prop
         
