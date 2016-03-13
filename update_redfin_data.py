@@ -29,7 +29,7 @@ def main():
   
   logging.info("Fetching properties without redfin data from Fusion Table.")
   properties = fusion_tables.getRows(columns=FUSION_FIELDS,
-                                     where={"redfin_property_id": ""})
+                                     where={"status": ""})
   
   logging.info("Updating properties.")
   num_updated_properties = 0

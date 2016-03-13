@@ -128,8 +128,12 @@ class RedfinClient(object):
     prop["redfin_url"] = "https://www.redfin.com" + prop["redfin_url"] 
     
     # Listing status.
-    if "status" in result and "longerDefinitionToken" in result["status"]:
-      prop["status"] = result["status"]["longerDefinitionToken"]
+    if "status" in result:
+      if "longerDefinitionToken" in result["status"]:
+        prop["status"] = result["status"]["longerDefinitionToken"]
+      else:
+        prop["status"] = "not-for-sale"
+      
   
     # purchase price
     if "priceInfo" in result and "amount" in result["priceInfo"]:
@@ -193,20 +197,19 @@ class RedfinClient(object):
   def getUrlForAddress(self, address, city, state):
     url = _LOCATION_URL.format(location=urllib.quote(address))
     result = self.queryRedfin(url)
-    city_state = '%s, %s' % (city, state)
+    print result
     
     if "sections" in result and len(result["sections"]) > 0:
       first_section = result["sections"][0]
       if "rows" in first_section and len(first_section["rows"]) > 0:
         location = first_section["rows"][0]
-        if location["subName"] == city_state:
-          if "url" in location:
-            return location["url"]
+        if "url" in location:
+          return location["url"]
       
 
 if __name__ == "__main__":
   client = RedfinClient()
-  info = client.getCorePropertyInfo('3438 Blue Mountain Dr', 'San Jose', 'CA')
+  info = client.getCorePropertyInfo('1028 MONTOYA Ter', 'Union City', 'CA')
   print info
   
   
