@@ -19,6 +19,12 @@ KEY_FIELDS = [
 ]
 
 FUSION_FIELDS = KEY_FIELDS + REDFIN_FIELDS
+
+FINAL_STATUS = [
+  "not-for-sale",
+  "sold",
+]
+
     
 def main():
   logging.getLogger().setLevel(logging.INFO)
@@ -28,8 +34,13 @@ def main():
   zillow = RedfinClient()
   
   logging.info("Fetching properties without redfin data from Fusion Table.")
-  properties = fusion_tables.getRows(columns=FUSION_FIELDS,
-                                     where={"status": ""})
+  sql = "SELECT "
+  sql += ", ".join(KEY_FIELDS)
+  sql += " FROM " + fusion_tables.table_id
+  conditions = ["status NOT EQUAL TO '%s'" % s for s in FINAL_STATUS]
+  sql += " WHERE "
+  sql += " AND ".join(conditions)
+  properties = fusion_tables.query(sql)
   
   logging.info("Updating properties.")
   num_updated_properties = 0

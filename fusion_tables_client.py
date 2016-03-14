@@ -78,8 +78,15 @@ class FusionTablesClient(object):
       row_data = {k:v for k,v in zip(unflattened_dict["columns"], row)}
       flattened_rows.append(row_data)
     return flattened_rows
-          
-  def getRows(self, columns = ["*"], where={}, order_by=None):
+         
+  def query(self, sql):
+    response = self.executeReadQuery(sql)
+    return self.flattenRowColumnData(response)
+  
+  def getRows(self, 
+              columns = ["*"], 
+              where={}, 
+              order_by=None):
     sql = "SELECT "
     sql += ", ".join(columns)
     sql += " FROM " + self.table_id
@@ -90,8 +97,7 @@ class FusionTablesClient(object):
     if order_by:
       sql += " ORDER BY " + order_by
     logging.info("GET ROWS: %s", sql)
-    response = self.executeReadQuery(sql)
-    return self.flattenRowColumnData(response)
+    return self.query(sql)
     
   def insertRow(self, row):
     return self.insertRows([row])
