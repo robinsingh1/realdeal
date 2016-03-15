@@ -34,12 +34,12 @@ class RealDealWorkflow(RealDealBaseTask):
         upstream_tasks=find_new_properties_task,
         base_dir=self.base_dir,
         epoch=self.epoch)
-    get_redfin_data_task = UpdateRedfinData(
-        upstream_tasks=get_mortgage_data_task,
-        base_dir=self.base_dir,
-        epoch=self.epoch)
+#     get_redfin_data_task = UpdateRedfinData(
+#         upstream_tasks=get_mortgage_data_task,
+#         base_dir=self.base_dir,
+#         epoch=self.epoch)
     get_zillow_data_task = UpdateZillowData(
-        upstream_tasks=get_redfin_data_task,
+        upstream_tasks=get_mortgage_data_task,
         base_dir=self.base_dir,
         epoch=self.epoch)
     upload_to_fusion_tables_task = UploadToFusionTables(
