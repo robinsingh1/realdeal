@@ -96,6 +96,7 @@ class RedfinClient(object):
     self.rate_limiter.limit()
     response = requests.get(url, headers=_DEFAULT_HEADERS)
     content = response.content
+    print content
     content = content.replace('{}&&', '')
     result = json.loads(content)
   
@@ -209,7 +210,7 @@ class RedfinClient(object):
 
 if __name__ == "__main__":
   client = RedfinClient()
-  info = client.getCorePropertyInfo('1028 MONTOYA Ter', 'Union City', 'CA')
+  info = client.getCorePropertyInfo('2098 Camperdown Way', 'Union City', 'CA')
   print info
   
   
