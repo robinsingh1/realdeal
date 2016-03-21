@@ -37,9 +37,7 @@ def main():
   sql = "SELECT "
   sql += ", ".join(KEY_FIELDS)
   sql += " FROM " + fusion_tables.table_id
-  conditions = ["status NOT EQUAL TO '%s'" % s for s in FINAL_STATUS]
-  sql += " WHERE "
-  sql += " AND ".join(conditions)
+  sql += " WHERE status = ''"
   properties = fusion_tables.query(sql)
   
   logging.info("Updating properties.")
