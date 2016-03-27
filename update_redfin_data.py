@@ -10,19 +10,10 @@ import os
 from fusion_tables_client import FusionTablesClient
 from redfin_client import RedfinClient, REDFIN_FIELDS
 
-KEY_FIELDS = [
-  "rowid",
-  "address",
-  "city",
-  "state",
-  "zip",
-]
-
-FUSION_FIELDS = KEY_FIELDS + REDFIN_FIELDS
-
-FINAL_STATUS = [
-  "not-for-sale",
-  "sold",
+__NEEDS_UPDATE_STATUS = [
+  "",
+  "active",
+  "pending",
 ]
 
     
@@ -34,10 +25,11 @@ def main():
   zillow = RedfinClient()
   
   logging.info("Fetching properties without redfin data from Fusion Table.")
+  status_list = ", ".join(["'%s'" % status for status in __NEEDS_UPDATE_STATUS])
   sql = "SELECT "
-  sql += ", ".join(KEY_FIELDS)
+  sql += ", ".join(REDFIN_FIELDS)
   sql += " FROM " + fusion_tables.table_id
-  sql += " WHERE status = ''"
+  sql += " WHERE status IN ( %s )" % status_list
   properties = fusion_tables.query(sql)
   
   logging.info("Updating properties.")

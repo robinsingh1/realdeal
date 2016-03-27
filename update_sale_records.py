@@ -5,7 +5,6 @@ Created on Mar 13, 2016
 '''
 import csv
 import logging
-import os
 import time
 
 from redfin_client import RedfinClient
