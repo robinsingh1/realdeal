@@ -29,7 +29,18 @@ def isRateLimitExceededException(exception):
           exception.resp.status == 403 and 
           exception._get_reason().strip() == "Rate Limit Exceeded")
 
-
+def isInternalErrorException(exception):
+  """Return True if exception is a retryable internal error."""
+  return (isinstance(exception, HttpError) and 
+          exception.resp.status == 503 and 
+          exception._get_reason().strip() == "Internal error. Please try again.")
+  
+def isRetryableException(exception):
+  """Return True if exception is retryable."""
+  return (isInternalErrorException(exception) or
+          isRateLimitExceededException(exception))
+  
+    
 class FusionTablesClient(object):
   credentials = None
   service = None
@@ -52,14 +63,14 @@ class FusionTablesClient(object):
                                              state_file=RATE_LIMITER_FILE)
 
 
-  @retry(retry_on_exception=isRateLimitExceededException, 
+  @retry(retry_on_exception=isRetryableException, 
          wait_exponential_multiplier=1000, 
          wait_exponential_max=10000)
   def executeWriteQuery(self, sql, multiplier=REQUESTS_PER_WRITE):
     self.rate_limiter.limit(multiplier=multiplier)
     return self.service.query().sql(sql=sql).execute() 
 
-  @retry(retry_on_exception=isRateLimitExceededException, 
+  @retry(retry_on_exception=isRetryableException, 
          wait_exponential_multiplier=1000, 
          wait_exponential_max=10000)
   def executeReadQuery(self, sql):
