@@ -137,6 +137,8 @@ class FusionTablesClient(object):
     for column, value in row.items():
       if column.lower() == 'rowid':
         continue
+      if value == 'NaN':
+        continue
       column_values.append("%s = '%s'" % (column, value))
     sql += ", ".join(column_values)
     sql += " WHERE ROWID = '%s'" % row_id
