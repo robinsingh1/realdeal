@@ -166,8 +166,8 @@ class RedfinClient(object):
                                              prop["state"])
       updated_prop = copy.deepcopy(prop)
       
-      if redfin_info:
-        is_updated = False  
+      is_updated = False
+      if redfin_info:  
         for field in REDFIN_FIELDS:
           old_value = prop.get(field, None)
           new_value = redfin_info.get(field, None)
