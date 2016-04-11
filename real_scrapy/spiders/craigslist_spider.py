@@ -12,7 +12,9 @@ from real_scrapy.items import CraigslistItem
   
 class CraigslistSpider(scrapy.Spider):
     name = "craigslist"
-    allowed_domains = ["craigslist.org"]
+    debug = False
+    if not debug:
+      allowed_domains = ["craigslist.org"]
     
     locations = [
 #       "Alameda",
@@ -68,9 +70,10 @@ class CraigslistSpider(scrapy.Spider):
       for i in range(1, 5):
         start_urls.append(location_url + "&s=" + str(i) + "00")
     
-#     start_urls = [
-#       "file:///Users/pitzer/Documents/workspace/realdeal/data/craigslist_rentals_hayward.html"
-#     ]    
+    if debug:
+      start_urls = [
+        "file:///Users/pitzer/Documents/workspace/realdeal/data/craigslist_rentals_hayward.html"
+      ]    
 
     def parse(self, response):
 #         with open('data/craigslist_rentals_hayward.html', 'wb') as f:
@@ -95,9 +98,10 @@ class CraigslistSpider(scrapy.Spider):
             item["link"] = "http://sfbay.craigslist.org" + ''.join(info.xpath("a/@href").extract())
 
 
-#             follow = 'file:///Users/pitzer/Documents/workspace/realdeal/data/craigslist_rentals_hayward_%s.html' % item['craigslist_id']
+            if self.debug:
+              item["link"] = 'file:///Users/pitzer/Documents/workspace/realdeal/data/craigslist_rentals_hayward_5530420563.html'
+           
             #Parse request to follow the posting link into the actual post
-            
             request = scrapy.Request(item["link"] , callback=self.parse_item_page)
             request.meta['item'] = item
             yield request
@@ -112,16 +116,29 @@ class CraigslistSpider(scrapy.Spider):
             item['latitude'] = float(latitude)
         if longitude:
             item['longitude'] = float(longitude)
+            
         attr = response.xpath("//p[@class='attrgroup']")
-        try:
-            item["bedrooms"] = int(attr.xpath("span/b/text()")[0].extract())
-            bath = attr.xpath("span/b/text()")[1].extract()
-            item["building_size"] = int(''.join(attr.xpath("span")[1].xpath("b/text()").extract()))
-            if(bath.isdigit()):
-                item["bathrooms"] = float(attr.xpath("span/b/text()")[1].extract())
-            item["bathrooms"] = float(bath)
-        except:
-            pass
+        
+#         import pdb; pdb.set_trace()
+        # Extract bedrooms and bathrooms.
+        bed_bath_selector = attr.xpath("span/b/text()")
+        if len(bed_bath_selector) > 0:
+          bedrooms = bed_bath_selector[0].extract()
+          if bedrooms.isdigit():
+            item["bedrooms"] = int(bedrooms)
+        if len(bed_bath_selector) > 1:
+          bathrooms = attr.xpath("span/b/text()")[1].extract()
+          if bathrooms.isdigit():
+              item["bathrooms"] = float(bathrooms)
+                
+        # Extract the building size.
+        building_size_selector = attr.xpath("span")
+        if len(building_size_selector) > 1:
+          building_size = ''.join(building_size_selector[1].xpath("b/text()").extract())
+          if(building_size.isdigit()):
+            item["building_size"] = int(building_size)
+        
+        # Extract the posting date.
         postinginfo = response.xpath("//p[@class = 'postinginfo reveal']").xpath("time/@datetime")
         if postinginfo:
           item["posting_date"] = postinginfo[0].extract()
