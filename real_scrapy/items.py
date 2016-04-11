@@ -22,3 +22,16 @@ class RealScrapyItem(scrapy.Item):
   image = scrapy.Field()
   realtor_url = scrapy.Field()
   realtor_property_id = scrapy.Field()
+
+
+class CraigslistItem(scrapy.Item):
+    title = scrapy.Field()
+    link = scrapy.Field()
+    price = scrapy.Field()
+    bedrooms = scrapy.Field()
+    bathrooms = scrapy.Field()
+    building_size = scrapy.Field()
+    craigslist_id = scrapy.Field()
+    posting_date = scrapy.Field()    
+    latitude = scrapy.Field()
+    longitude = scrapy.Field()
