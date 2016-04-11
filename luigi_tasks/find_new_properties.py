@@ -14,26 +14,26 @@ from fusion_tables_client import FusionTablesClient
 
 
 class FindNewProperties(RealDealBaseTask):
-  __KEY_COLUMNS = ["realtor_property_id"]
-  __client = None
   __cached_row_keys = set()
+  
   fusion_service_account = luigi.Parameter()
   fusion_private_key = luigi.Parameter()
   fusion_table_id = luigi.Parameter()
+  key_columns = luigi.Parameter()
   
   def output(self):
     return self.getLocalFileTarget("properties_new.json")
           
   def initializeFusionTable(self):
-    self.__client = FusionTablesClient(self.fusion_service_account,
-                                       self.fusion_private_key, 
-                                       self.fusion_table_id)
-    rows = self.__client.getRows(columns=self.__KEY_COLUMNS)
+    client = FusionTablesClient(self.fusion_service_account,
+                                self.fusion_private_key, 
+                                self.fusion_table_id)
+    rows = client.getRows(columns=self.key_columns.split(","))
     for row in rows:
       self.__cached_row_keys.add(self.rowKey(row))
   
   def rowKey(self, row):
-    return ":".join([row.get(c) for c in self.__KEY_COLUMNS])
+    return ":".join([row.get(c) for c in self.key_columns.split(",")])
   
   def propertyInFusionTable(self, prop):
     key = self.rowKey(prop)
@@ -50,6 +50,8 @@ class FindNewProperties(RealDealBaseTask):
           prop["created"] = strftime("%Y-%m-%d %H:%M:%S", localtime())
           prop["last_update"] = prop["created"]
           properties_out.append(prop)
+          self.__cached_row_keys.add(self.rowKey(prop))
+          
       json_str = "[%s]" % ",\n".join([json.dumps(p) for p in properties_out])
       fout.write(json_str)
 
