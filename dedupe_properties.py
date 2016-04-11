@@ -13,7 +13,7 @@ if __name__ == "__main__":
   prev_zillow_id = ""
   for row in rows:
     current_zillow_id = row["zillow_id"]
-    if current_zillow_id == prev_zillow_id:
+    if current_zillow_id and current_zillow_id == prev_zillow_id:
       dupe_rowids.append(row["rowid"])
     else:
       prev_zillow_id = current_zillow_id
