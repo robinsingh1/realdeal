@@ -33,7 +33,7 @@ class FindNewProperties(RealDealBaseTask):
       self.__cached_row_keys.add(self.rowKey(row))
   
   def rowKey(self, row):
-    return ":".join([row.get(c) for c in self.key_columns.split(",")])
+    return ":".join([unicode(row.get(c)) for c in self.key_columns.split(",")])
   
   def propertyInFusionTable(self, prop):
     key = self.rowKey(prop)
