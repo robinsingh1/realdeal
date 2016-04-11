@@ -3,6 +3,7 @@ scrapy
 
 scrapy crawl realtor
 scrapy crawl realtor -o properties.json
+scrapy crawl craigslist -o properties.json
 
 scrapy shell file://$PWD/hayward.html
  
@@ -11,8 +12,14 @@ shub schedule realtor
  
 python upload_properties_to_fusion.py
 
+# scrape real estate properties from realtor.com and upload to 
+# fusion tables
 python realdeal_pipeline.py RealDealWorkflow --local-scheduler
 python realdeal_pipeline.py RealDealWorkflow --local-scheduler --epoch=
+
+# scrape rental properties from craigslist and upload to 
+# fusion tables
+python craigslist_rentals_pipeline.py CraigslistRentalsWorkflow --local-scheduler
 
 INSTALL
 =======
