@@ -12,8 +12,8 @@ from redfin_client import RedfinClient, REDFIN_FIELDS
 
 __NEEDS_UPDATE_STATUS = [
   "",
-  "active",
-  "pending",
+#   "active",
+#   "pending",
 ]
 
     
