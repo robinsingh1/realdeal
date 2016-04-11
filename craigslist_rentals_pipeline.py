@@ -30,7 +30,7 @@ class CraigslistRentalsWorkflow(RealDealBaseTask):
         upstream_tasks=scrape_realtor_task,
         base_dir=self.base_dir,
         epoch=self.epoch,
-        key_columns="title,bathrooms,bedrooms,price",
+        key_columns="title,city,price",
         fusion_service_account = self.fusion_service_account,
         fusion_private_key = self.fusion_private_key,
         fusion_table_id = self.fusion_table_id)
