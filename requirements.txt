@@ -15,6 +15,7 @@ docutils==0.12
 enum34==1.1.2
 execnet==1.4.1
 funcsigs==0.4
+geopy=1.11.0
 google-api-python-client==1.4.2
 httplib2==0.9.2
 hubstorage==0.22.0
