@@ -22,6 +22,10 @@ class RealDealWorkflow(RealDealBaseTask):
   epoch = luigi.Parameter(
     time.strftime("%Y%m%d-%H%M%S", time.localtime()))
   
+  fusion_service_account = luigi.Parameter(os.environ["REALDEAL_SERVICE_ACCOUNT"])
+  fusion_private_key = luigi.Parameter(os.environ["REALDEAL_PRIVATE_KEY"])
+  fusion_table_id = luigi.Parameter(os.environ["REALDEAL_FUSION_TABLE_ID"])
+  
   def requires(self):
     scrape_realtor_task = ScrapeRealtor(
         base_dir=self.base_dir,
@@ -29,7 +33,10 @@ class RealDealWorkflow(RealDealBaseTask):
     find_new_properties_task = FindNewProperties(
         upstream_tasks=scrape_realtor_task,
         base_dir=self.base_dir,
-        epoch=self.epoch)
+        epoch=self.epoch,
+        fusion_service_account = os.environ["REALDEAL_SERVICE_ACCOUNT"],
+        fusion_private_key = os.environ["REALDEAL_PRIVATE_KEY"],
+        fusion_table_id = os.environ["REALDEAL_FUSION_TABLE_ID"])
     get_mortgage_data_task = UpdateMortageData(
         upstream_tasks=find_new_properties_task,
         base_dir=self.base_dir,

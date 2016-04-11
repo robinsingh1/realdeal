@@ -5,7 +5,7 @@ Created on Feb 21, 2016
 '''
 
 import json
-import os
+import luigi
 
 from time import localtime, strftime
 
@@ -14,23 +14,30 @@ from fusion_tables_client import FusionTablesClient
 
 
 class FindNewProperties(RealDealBaseTask):
-  __ROW_KEY = "realtor_property_id"
+  __KEY_COLUMNS = ["realtor_property_id"]
   __client = None
   __cached_row_keys = set()
+  fusion_service_account = luigi.Parameter()
+  fusion_private_key = luigi.Parameter()
+  fusion_table_id = luigi.Parameter()
   
   def output(self):
     return self.getLocalFileTarget("properties_new.json")
           
   def initializeFusionTable(self):
-    self.__client = FusionTablesClient(os.environ["REALDEAL_SERVICE_ACCOUNT"],
-                                       os.environ["REALDEAL_PRIVATE_KEY"], 
-                                       os.environ["REALDEAL_FUSION_TABLE_ID"])
-    rows = self.__client.getRows(columns=[self.__ROW_KEY])
+    self.__client = FusionTablesClient(self.fusion_service_account,
+                                       self.fusion_private_key, 
+                                       self.fusion_table_id)
+    rows = self.__client.getRows(columns=self.__KEY_COLUMNS)
     for row in rows:
-      self.__cached_row_keys.add(row[self.__ROW_KEY])
+      self.__cached_row_keys.add(self.rowKey(row))
+  
+  def rowKey(self, row):
+    return ":".join([row.get(c) for c in self.__KEY_COLUMNS])
   
   def propertyInFusionTable(self, prop):
-    return prop[self.__ROW_KEY] in self.__cached_row_keys
+    key = self.rowKey(prop)
+    return key in self.__cached_row_keys
                     
   def run(self):
     with self.input().open() as fin, self.output().open('w') as fout:
