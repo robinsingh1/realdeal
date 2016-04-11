@@ -34,9 +34,9 @@ class RealDealWorkflow(RealDealBaseTask):
         upstream_tasks=scrape_realtor_task,
         base_dir=self.base_dir,
         epoch=self.epoch,
-        fusion_service_account = os.environ["REALDEAL_SERVICE_ACCOUNT"],
-        fusion_private_key = os.environ["REALDEAL_PRIVATE_KEY"],
-        fusion_table_id = os.environ["REALDEAL_FUSION_TABLE_ID"])
+        fusion_service_account = self.fusion_service_account,
+        fusion_private_key = self.fusion_private_key,
+        fusion_table_id = self.fusion_table_id)
     get_mortgage_data_task = UpdateMortageData(
         upstream_tasks=find_new_properties_task,
         base_dir=self.base_dir,
