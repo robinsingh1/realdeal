@@ -34,6 +34,7 @@ class RealDealWorkflow(RealDealBaseTask):
         upstream_tasks=scrape_realtor_task,
         base_dir=self.base_dir,
         epoch=self.epoch,
+        key_columns="realtor_property_id",
         fusion_service_account = self.fusion_service_account,
         fusion_private_key = self.fusion_private_key,
         fusion_table_id = self.fusion_table_id)
@@ -52,7 +53,10 @@ class RealDealWorkflow(RealDealBaseTask):
     upload_to_fusion_tables_task = UploadToFusionTables(
         upstream_tasks=get_zillow_data_task,
         base_dir=self.base_dir,
-        epoch=self.epoch)
+        epoch=self.epoch,
+        fusion_service_account = self.fusion_service_account,
+        fusion_private_key = self.fusion_private_key,
+        fusion_table_id = self.fusion_table_id)
     return upload_to_fusion_tables_task
   
   def output(self):
