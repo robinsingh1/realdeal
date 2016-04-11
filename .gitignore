@@ -16,3 +16,6 @@
 /redfin_cookie.txt
 /fusion_tables_rate_limits.json
 /zillow_rate_limits.json
+/logging.conf
+/properties.json
+/.ipynb_checkpoints/
