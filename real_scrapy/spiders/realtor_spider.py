@@ -61,7 +61,7 @@ class RealtorSpider(scrapy.Spider):
         if extraction_selector:
           extracted_value = extraction_selector[0].extract().strip()
           if extraction in ["bedrooms", 'building_size']:
-            extracted_value = int(extracted_value)
+            extracted_value = int(extracted_value.replace(",", ""))
           if extraction == "bathrooms":
             extracted_value = float(extracted_value.replace("+", ".5"))
           if extraction == "purchase_price":
