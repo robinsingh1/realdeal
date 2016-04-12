@@ -20,6 +20,11 @@ ZILLOW_QUOTA_MAX_REQUESTS = 1000
 ZILLOW_QUOTA_TIME_INTERVAL = 60 * 60 * 24
 
 ZILLOW_FIELDS = [
+  "rowid",
+  "address",
+  "city",
+  "state",
+  "zip",
   "zillow_id",
   "zillow_url",
   "home_type",
@@ -61,7 +66,7 @@ class ZillowClient(object):
     self.zillow_wrapper = ZillowWrapper(zillow_api_key)
 
 
-  def updatePropertiesWithZillowData(self, properties):  
+  def updatePropertiesWithZillowData(self, properties, yield_all=False):  
     for prop in properties:
       logging.info("address: %s", prop["address"])
       self.rate_limiter.limit()
@@ -75,17 +80,18 @@ class ZillowClient(object):
         logging.error("ZillowError: %s", e.message)
       
       updated_prop = copy.deepcopy(prop)
-      
+      is_updated = False
       if deep_search_response:
         result = GetDeepSearchResults(deep_search_response)
-        is_updated = False
         for field in ZILLOW_FIELDS:
-          
           # Map property fields to Zillow fields.
           if field == "zillow_url":
             zillow_field = "home_detail_link"
           else:
             zillow_field = field
+          
+          if not hasattr(result, zillow_field):
+            continue
           
           old_value = prop.get(field, "")
           new_value = getattr(result, zillow_field)
@@ -104,4 +110,5 @@ class ZillowClient(object):
       else:
         logging.error("No Zillow property info found for: %s.", prop["address"])
       
-      yield updated_prop
+      if is_updated or yield_all:
+        yield updated_prop

@@ -20,7 +20,8 @@ class UpdateZillowData(RealDealBaseTask):
     with self.input().open() as fin, self.output().open('w') as fout:
       properties_in = json.load(fin)
       properties_out = []
-      for prop in zillow.updatePropertiesWithZillowData(properties_in):
+      for prop in zillow.updatePropertiesWithZillowData(properties_in, 
+                                                        yield_all=True):
         properties_out.append(prop)
       json_str = "[%s]" % ",\n".join([json.dumps(p) for p in properties_out])
       fout.write(json_str)
