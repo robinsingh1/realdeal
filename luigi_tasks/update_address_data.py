@@ -8,11 +8,14 @@ import json
 
 from geopy.geocoders import Nominatim
 from luigi_tasks.base_task import RealDealBaseTask
+from retrying import retry
 
 
 class AddessGeoCoder(object):
     geolocator = Nominatim()
-                
+    
+    @retry(wait_exponential_multiplier=1000, 
+           wait_exponential_max=10000)
     def address(self, latitude, longitude):
         location = self.geolocator.reverse("%f, %f" % (latitude, longitude))
         if location and "address" in location.raw:
