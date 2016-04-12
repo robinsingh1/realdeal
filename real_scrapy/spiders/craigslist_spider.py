@@ -67,8 +67,8 @@ class CraigslistSpider(scrapy.Spider):
       location_url = base_url.format(location=urllib.quote_plus(l))
       start_urls.append(location_url)
       # scrape subsequent pages
-      for i in range(1, 5):
-        start_urls.append(location_url + "&s=" + str(i) + "00")
+#       for i in range(1, 5):
+#         start_urls.append(location_url + "&s=" + str(i) + "00")
     
     if debug:
       start_urls = [
