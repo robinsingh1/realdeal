@@ -78,7 +78,7 @@ class FusionTablesClient(object):
     return self.service.query().sql(sql=sql).execute() 
   
   def dictValuePad(self, value):
-    return "'" + str(value) + "'"
+    return "'" + unicode(value) + "'"
   
   def flattenRowColumnData(self, unflattened_dict):
     if "rows" not in unflattened_dict or "columns" not in unflattened_dict:
