@@ -5,9 +5,7 @@ from fusion_tables_client import FusionTablesClient
 
 
 if __name__ == "__main__":
-  client = FusionTablesClient(os.environ["REALDEAL_SERVICE_ACCOUNT"],
-                              os.environ["REALDEAL_PRIVATE_KEY"], 
-                              os.environ["REALDEAL_FUSION_TABLE_ID"])
+  client = FusionTablesClient(table_id=os.environ["REALDEAL_FUSION_TABLE_ID"])
   rows = client.getRows(columns=["rowid", "zillow_id"], order_by="zillow_id")
   dupe_rowids = []
   prev_zillow_id = ""

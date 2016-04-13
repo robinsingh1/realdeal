@@ -18,9 +18,7 @@ FUSION_FIELDS = [
 
 def main():
   logging.getLogger().setLevel(logging.INFO)
-  fusion_tables = FusionTablesClient(os.environ["REALDEAL_SERVICE_ACCOUNT"],
-                                     os.environ["REALDEAL_PRIVATE_KEY"], 
-                                     os.environ["REALDEAL_FUSION_TABLE_ID"])
+  fusion_tables = FusionTablesClient(table_id=os.environ["REALDEAL_FUSION_TABLE_ID"])
   
   logging.info("Fetching properties without mortgage data from Fusion Table.")
   properties = fusion_tables.getRows(columns=FUSION_FIELDS,

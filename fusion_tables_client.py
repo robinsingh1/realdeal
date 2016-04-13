@@ -46,7 +46,9 @@ class FusionTablesClient(object):
   service = None
   table_id = None
   
-  def __init__(self, service_account, private_key, table_id):
+  def __init__(self, table_id,
+               service_account=os.environ["REALDEAL_SERVICE_ACCOUNT"], 
+               private_key=os.environ["REALDEAL_PRIVATE_KEY"]):
     self.table_id = table_id
     self.credentials = SignedJwtAssertionCredentials(service_account, 
                                                      private_key, 

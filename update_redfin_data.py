@@ -19,9 +19,7 @@ __NEEDS_UPDATE_STATUS = [
     
 def main():
   logging.getLogger().setLevel(logging.INFO)
-  fusion_tables = FusionTablesClient(os.environ["REALDEAL_SERVICE_ACCOUNT"],
-                                     os.environ["REALDEAL_PRIVATE_KEY"], 
-                                     os.environ["REALDEAL_FUSION_TABLE_ID"])
+  fusion_tables = FusionTablesClient(table_id=os.environ["REALDEAL_FUSION_TABLE_ID"])
   zillow = RedfinClient()
   
   logging.info("Fetching properties without redfin data from Fusion Table.")

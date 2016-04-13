@@ -14,20 +14,16 @@ from fusion_tables_client import FusionTablesClient
 
 
 class FindNewProperties(RealDealBaseTask):
-  __cached_row_keys = set()
-  
-  fusion_service_account = luigi.Parameter()
-  fusion_private_key = luigi.Parameter()
   fusion_table_id = luigi.Parameter()
   key_columns = luigi.Parameter()
+  
+  __cached_row_keys = set()
   
   def output(self):
     return self.getLocalFileTarget("properties_new.json")
           
   def initializeFusionTable(self):
-    client = FusionTablesClient(self.fusion_service_account,
-                                self.fusion_private_key, 
-                                self.fusion_table_id)
+    client = FusionTablesClient(table_id=self.fusion_table_id)
     rows = client.getRows(columns=self.key_columns.split(","))
     for row in rows:
       self.__cached_row_keys.add(self.rowKey(row))
