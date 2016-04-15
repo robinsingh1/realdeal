@@ -59,7 +59,11 @@ class UpdateAddressData(RealDealBaseTask):
           if not city:    
               print "Couldn't find city for: %f, %f" % (lat, lon)
               continue
-      
+
+          if city == u"San José":
+            city = u"San Jose"
+          elif city == u"SF":
+            city = u"San Francisco"
           prop["zipcode"] = zipcode
           prop["city"] = city   
           properties_out.append(prop)
