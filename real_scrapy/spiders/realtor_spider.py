@@ -60,8 +60,14 @@ class RealtorSpider(scrapy.Spider):
         extraction_selector = itemscope.xpath(extraction_xpath)
         if extraction_selector:
           extracted_value = extraction_selector[0].extract().strip()
-          if extraction in ["bedrooms", 'building_size']:
+          if extraction in ["bedrooms", "building_size"]:
             extracted_value = int(extracted_value.replace(",", ""))
+          if extraction in ["lot_size"]:
+            extracted_value = float(extracted_value.replace(",", ""))
+            if extracted_value < 100.0:
+              extracted_value = int(43560.0 * extracted_value)
+            else:
+              extracted_value = int(extracted_value)
           if extraction == "bathrooms":
             extracted_value = float(extracted_value.replace("+", ".5"))
           if extraction == "purchase_price":
