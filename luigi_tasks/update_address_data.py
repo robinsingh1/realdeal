@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 '''
 Created on Apr 10, 2016
 
@@ -60,6 +62,7 @@ class UpdateAddressData(RealDealBaseTask):
               print "Couldn't find city for: %f, %f" % (lat, lon)
               continue
 
+          city = unicode(city)
           if city == u"San José":
             city = u"San Jose"
           elif city == u"SF":
