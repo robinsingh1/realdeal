@@ -10,6 +10,7 @@ import os.path
 
 from pyzillow.pyzillow import ZillowWrapper, GetDeepSearchResults
 from pyzillow.pyzillowerrors import ZillowError
+from retrying import retry
 from time import localtime, strftime
 
 from rate_limiter import RequestRateLimiter
@@ -51,6 +52,12 @@ ZILLOW_FIELDS = [
 ]
 
 
+def isRetryableException(exception):
+  """Return True if exception is a retryable internal error."""
+  return (isinstance(exception, ZillowError) and 
+          exception.status in [3, 4, 505])
+
+
 class ZillowClient(object):
   '''
   classdocs
@@ -65,24 +72,37 @@ class ZillowClient(object):
                                              state_file=ZILLOW_RATE_LIMITER_FILE)
     self.zillow_wrapper = ZillowWrapper(zillow_api_key)
 
-
+  
+  @retry(retry_on_exception=isRetryableException, 
+         wait_exponential_multiplier=1000, 
+         wait_exponential_max=10000)
+  def getDeepSearchResults(self, address, citystatezip, rentzestimate=True):
+#     self.rate_limiter.limit()
+    deep_search_response = self.zillow_wrapper.get_deep_search_results(
+        address=address, 
+        zipcode=citystatezip, 
+        rentzestimate=rentzestimate)
+    return GetDeepSearchResults(deep_search_response)
+        
   def updatePropertiesWithZillowData(self, properties, yield_all=False):  
     for prop in properties:
-      logging.info("address: %s", prop["address"])
-      self.rate_limiter.limit()
-      deep_search_response = None
-      try:
-        deep_search_response = self.zillow_wrapper.get_deep_search_results(
-            address=prop["address"], 
-            zipcode=prop["city"] + ", " + prop["zip"], 
-            rentzestimate=True)
-      except ZillowError as e: 
-        logging.error("ZillowError: %s", e.message)
-      
       updated_prop = copy.deepcopy(prop)
       is_updated = False
-      if deep_search_response:
-        result = GetDeepSearchResults(deep_search_response)
+      result = None
+      logging.info("Updating: %s, %s, %s", 
+                    prop["address"], prop["city"], prop["zip"])
+      
+      if prop["address"] and prop["city"] and prop["zip"]:
+        try:
+          result = self.getDeepSearchResults(
+              address=prop["address"], 
+              citystatezip=prop["city"] + ", " + prop["zip"])
+        except ZillowError as e: 
+          logging.error("No Zillow data found for: %s, %s, %s", 
+                        prop["address"], prop["city"], prop["zip"])
+          logging.error("ZillowError: %s", e.message)
+      
+      if result:
         for field in ZILLOW_FIELDS:
           # Map property fields to Zillow fields.
           if field == "zillow_url":
@@ -107,8 +127,6 @@ class ZillowClient(object):
           updated_prop["last_update"] = strftime("%Y-%m-%d %H:%M:%S", localtime())
           updated_prop["zillow_last_update"] = updated_prop["last_update"]
       
-      else:
-        logging.error("No Zillow property info found for: %s.", prop["address"])
       
       if is_updated or yield_all:
         yield updated_prop
