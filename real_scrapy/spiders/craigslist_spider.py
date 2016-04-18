@@ -101,11 +101,26 @@ class CraigslistSpider(scrapy.Spider):
             if self.debug:
               item["link"] = 'file:///Users/pitzer/Documents/workspace/realdeal/data/craigslist_rentals_hayward_5530420563.html'
            
+            item["link"] = 'http://sfbay.craigslist.org/eby/apa/5542791384.html'
             #Parse request to follow the posting link into the actual post
             request = scrapy.Request(item["link"] , callback=self.parse_item_page)
             request.meta['item'] = item
             yield request
 
+    def isFloat(self, value):
+      try:
+        float(value)
+        return True
+      except:
+        return False
+      
+    def isInt(self, value):
+      try:
+        int(value)
+        return True
+      except:
+        return False
+      
     #Parsing method to grab items from inside the individual postings
     def parse_item_page(self, response):
         item = response.meta["item"]
@@ -119,16 +134,17 @@ class CraigslistSpider(scrapy.Spider):
             
         attr = response.xpath("//p[@class='attrgroup']")
         
-#         import pdb; pdb.set_trace()
+        
         # Extract bedrooms and bathrooms.
         bed_bath_selector = attr.xpath("span/b/text()")
+#         import pdb; pdb.set_trace()
         if len(bed_bath_selector) > 0:
           bedrooms = bed_bath_selector[0].extract()
-          if bedrooms.isdigit():
+          if self.isInt(bedrooms):
             item["bedrooms"] = int(bedrooms)
         if len(bed_bath_selector) > 1:
-          bathrooms = attr.xpath("span/b/text()")[1].extract()
-          if bathrooms.isdigit():
+          bathrooms = bed_bath_selector[1].extract()
+          if self.isFloat(bathrooms):
               item["bathrooms"] = float(bathrooms)
                 
         # Extract the building size.
