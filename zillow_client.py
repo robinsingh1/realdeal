@@ -77,7 +77,7 @@ class ZillowClient(object):
          wait_exponential_multiplier=1000, 
          wait_exponential_max=10000)
   def getDeepSearchResults(self, address, citystatezip, rentzestimate=True):
-#     self.rate_limiter.limit()
+    self.rate_limiter.limit()
     deep_search_response = self.zillow_wrapper.get_deep_search_results(
         address=address, 
         zipcode=citystatezip, 
@@ -101,7 +101,11 @@ class ZillowClient(object):
           logging.error("No Zillow data found for: %s, %s, %s", 
                         prop["address"], prop["city"], prop["zip"])
           logging.error("ZillowError: %s", e.message)
-      
+          # Set invalid zillow-id if no exact match was found for input address
+          if e.status in [500, 501, 502, 503, 504, 506, 507]:
+            result = object()
+            setattr(result, 'zillow_id', -1)
+
       if result:
         for field in ZILLOW_FIELDS:
           # Map property fields to Zillow fields.

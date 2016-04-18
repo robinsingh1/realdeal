@@ -101,7 +101,8 @@ class FusionTablesClient(object):
   def getRows(self, 
               columns = ["*"], 
               where={}, 
-              order_by=None):
+              order_by=None, 
+              limit=None):
     sql = "SELECT "
     sql += ", ".join(columns)
     sql += " FROM " + self.table_id
@@ -111,6 +112,8 @@ class FusionTablesClient(object):
       sql += " AND ".join(conditions)
     if order_by:
       sql += " ORDER BY " + order_by
+    if limit:
+      sql += " LIMIT %d" % limit
     logging.info("GET ROWS: %s", sql)
     return self.query(sql)
     
