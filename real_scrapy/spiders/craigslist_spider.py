@@ -101,7 +101,6 @@ class CraigslistSpider(scrapy.Spider):
             if self.debug:
               item["link"] = 'file:///Users/pitzer/Documents/workspace/realdeal/data/craigslist_rentals_hayward_5530420563.html'
            
-            item["link"] = 'http://sfbay.craigslist.org/eby/apa/5542791384.html'
             #Parse request to follow the posting link into the actual post
             request = scrapy.Request(item["link"] , callback=self.parse_item_page)
             request.meta['item'] = item
