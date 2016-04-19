@@ -106,7 +106,8 @@ class FusionTablesClient(object):
     sql = "SELECT "
     sql += ", ".join(columns)
     sql += " FROM " + self.table_id
-    conditions = ["%s = '%s'" % (k, v) for k,v in where.iteritems()]
+    conditions = ["%s = %s" % (k, self.dictValuePad(v)) 
+                  for k,v in where.iteritems()]
     if conditions:
       sql += " WHERE "
       sql += " AND ".join(conditions)
@@ -157,7 +158,7 @@ class FusionTablesClient(object):
         continue
       if value == 'NaN':
         continue
-      column_values.append("%s = '%s'" % (column, value))
+      column_values.append("%s = %s" % (column, self.dictValuePad(value)))
     sql += ", ".join(column_values)
     sql += " WHERE ROWID = '%s'" % row_id
     logging.info("UPDATE ROW: %s", sql)
