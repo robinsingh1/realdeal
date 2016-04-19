@@ -12,6 +12,7 @@ from pyzillow.pyzillow import ZillowWrapper, GetDeepSearchResults
 from pyzillow.pyzillowerrors import ZillowError
 from retrying import retry
 from time import localtime, strftime
+from xml.etree import cElementTree as ElementTree  # for zillow API
 
 from rate_limiter import RequestRateLimiter
 
@@ -50,6 +51,8 @@ ZILLOW_FIELDS = [
   "region_name",
   "region_type",
 ]
+
+ZILLOW_NOT_FOUND_RESPONSE = """<?xml version="1.0" encoding="utf-8"?><SearchResults:searchresults xsi:schemaLocation="http://www.zillow.com/static/xsd/SearchResults.xsd http://www.zillowstatic.com/vstatic/dc6fc1b/static/xsd/SearchResults.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SearchResults="http://www.zillow.com/static/xsd/SearchResults.xsd"><message><text>All good</text><code>0</code></message><response><results><result><zpid>-1</zpid></result></results></response></SearchResults:searchresults>"""
 
 
 def isRetryableException(exception):
@@ -102,9 +105,9 @@ class ZillowClient(object):
                         prop["address"], prop["city"], prop["zip"])
           logging.error("ZillowError: %s", e.message)
           # Set invalid zillow-id if no exact match was found for input address
-          if e.status in [500, 501, 502, 503, 504, 506, 507]:
-            result = object()
-            setattr(result, 'zillow_id', -1)
+          if e.status in [500, 501, 502, 503, 504, 506, 507, 508]:
+            result = GetDeepSearchResults(
+                data=ElementTree.fromstring(ZILLOW_NOT_FOUND_RESPONSE))
 
       if result:
         for field in ZILLOW_FIELDS:
