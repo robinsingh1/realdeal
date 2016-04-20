@@ -29,7 +29,6 @@ def main():
   sql += ", ".join(REDFIN_FIELDS)
   sql += " FROM " + fusion_tables.table_id
   sql += " WHERE status IN ( %s )" % status_list
-  sql += " LIMIT 1"
   properties = fusion_tables.query(sql)
   
   logging.info("Updating properties.")
