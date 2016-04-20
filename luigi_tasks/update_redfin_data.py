@@ -19,7 +19,7 @@ class UpdateRedfinData(RealDealBaseTask):
     with self.input().open() as fin, self.output().open('w') as fout:
       properties_in = json.load(fin)
       properties_out = []
-      for prop in redfin.updatePropertiesWithRedfinData(properties_in):
+      for prop, _ in redfin.updatePropertiesWithRedfinData(properties_in):
         properties_out.append(prop)
       json_str = "[%s]" % ",\n".join([json.dumps(p) for p in properties_out])
       fout.write(json_str)

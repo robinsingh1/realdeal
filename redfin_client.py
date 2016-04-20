@@ -158,7 +158,7 @@ class RedfinClient(object):
 
     return records
         
-  def updatePropertiesWithRedfinData(self, properties, yield_all=False):  
+  def updatePropertiesWithRedfinData(self, properties):  
     for prop in properties:
       logging.info("address: %s", prop["address"])
       redfin_info = self.getCorePropertyInfo(prop["address"], 
@@ -186,8 +186,7 @@ class RedfinClient(object):
       else:
         logging.error("No Redfin property info found for: %s.", prop["address"])
       
-      if is_updated or yield_all:
-        yield updated_prop
+      yield updated_prop, is_updated
         
   def queryRedfin(self, url):
     self.rate_limiter.limit()

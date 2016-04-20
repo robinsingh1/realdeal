@@ -19,8 +19,9 @@ __NEEDS_UPDATE_STATUS = [
     
 def main():
   logging.getLogger().setLevel(logging.INFO)
-  fusion_tables = FusionTablesClient(table_id=os.environ["REALDEAL_FUSION_TABLE_ID"])
-  zillow = RedfinClient()
+  fusion_tables = FusionTablesClient(
+      table_id=os.environ["REALDEAL_FUSION_TABLE_ID"])
+  redfin = RedfinClient()
   
   logging.info("Fetching properties without redfin data from Fusion Table.")
   status_list = ", ".join(["'%s'" % status for status in __NEEDS_UPDATE_STATUS])
@@ -28,15 +29,16 @@ def main():
   sql += ", ".join(REDFIN_FIELDS)
   sql += " FROM " + fusion_tables.table_id
   sql += " WHERE status IN ( %s )" % status_list
+  sql += " LIMIT 1"
   properties = fusion_tables.query(sql)
   
   logging.info("Updating properties.")
   num_updated_properties = 0
-  for prop in zillow.updatePropertiesWithRedfinData(properties):
-    fusion_tables.updateRow(prop["rowid"], prop)
-    num_updated_properties += 1
-  
-  print "%d properties updated." % num_updated_properties
+  for prop, is_updated in redfin.updatePropertiesWithRedfinData(properties):
+    if is_updated:
+      fusion_tables.updateRow(prop["rowid"], prop)
+      num_updated_properties += 1
+  logging.info("%d properties updated." % num_updated_properties)
  
 if __name__ == "__main__":
   main()
