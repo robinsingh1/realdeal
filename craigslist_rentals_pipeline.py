@@ -3,7 +3,7 @@ Created on Feb 20, 2016
 
 @author: pitzer
 '''
-
+import logging
 import luigi
 import os
 import time 
@@ -28,7 +28,7 @@ class CraigslistRentalsWorkflow(RealDealBaseTask):
         upstream_tasks=scrape_realtor_task,
         base_dir=self.base_dir,
         epoch=self.epoch,
-        key_columns="title,city,price",
+        key_columns="craigslist_id",
         fusion_table_id = self.fusion_table_id)
     update_address_data_task = UpdateAddressData(
         upstream_tasks=find_new_properties_task,
@@ -49,4 +49,5 @@ class CraigslistRentalsWorkflow(RealDealBaseTask):
       outfile.write('OK')
  
 if __name__ == '__main__':
+  logging.getLogger().setLevel(logging.INFO)
   luigi.run()
