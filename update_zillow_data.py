@@ -13,7 +13,8 @@ from zillow_client import ZillowClient, ZILLOW_FIELDS
     
 def main():
   logging.getLogger().setLevel(logging.INFO)
-  fusion_tables = FusionTablesClient(table_id=os.environ["REALDEAL_SALES_RECORDS_TABLE_ID"])
+  fusion_tables = FusionTablesClient(
+      table_id=os.environ["REALDEAL_SALES_RECORDS_TABLE_ID"])
   zillow = ZillowClient(os.environ["REALDEAL_ZILLOW_API_KEY"])
   
   logging.info("Fetching properties without Zillow data from Fusion Table.")
