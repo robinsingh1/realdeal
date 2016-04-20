@@ -51,6 +51,7 @@ ruamel.ordereddict==0.4.9
 ruamel.yaml==0.10.20
 scrapinghub==1.7.0
 Scrapy==1.0.5
+sendgrid==2.2.1
 service-identity==14.0.0
 shub==2.0.1
 simplejson==3.8.1

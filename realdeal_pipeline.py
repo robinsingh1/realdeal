@@ -15,6 +15,7 @@ from luigi_tasks.find_new_properties import FindNewProperties
 from luigi_tasks.update_mortage_data import UpdateMortageData
 from luigi_tasks.update_zillow_data import UpdateZillowData
 from luigi_tasks.upload_to_fusion_tables import UploadToFusionTables
+from luigi_tasks.email_deals import EmailDeals
 
 
 class RealDealWorkflow(RealDealBaseTask):
@@ -51,7 +52,11 @@ class RealDealWorkflow(RealDealBaseTask):
         base_dir=self.base_dir,
         epoch=self.epoch,
         fusion_table_id = self.fusion_table_id)
-    return upload_to_fusion_tables_task
+    email_task = EmailDeals(
+        upstream_tasks=upload_to_fusion_tables_task,
+        base_dir=self.base_dir,
+        epoch=self.epoch)
+    return email_task
   
   def output(self):
     return self.getLocalFileTarget("workflow_complete")
