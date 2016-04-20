@@ -104,8 +104,7 @@ class EmailDeals(RealDealBaseTask):
                                        PROPERTY_TABLE_FIELDS,
                                        PROPERTY_TABLE_FIELD_TYPES)
       html += "</div>\n"
-      
-      print html
+
       subject = "Found %d new properties" % len(properties)
       client.send(EMAIL_TO, subject, html, EMAIL_FROM)
       
