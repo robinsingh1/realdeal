@@ -19,14 +19,13 @@ def main():
   logging.info("Fetching properties without Zillow data from Fusion Table.")
   properties = fusion_tables.getRows(columns=ZILLOW_FIELDS,
                                      where={"zillow_id": ""},
-                                     limit=100)
-  
+                                     limit=500)
   logging.info("Updating properties.")
   num_updated_properties = 0
-  for prop in zillow.updatePropertiesWithZillowData(properties):
-    fusion_tables.updateRow(prop["rowid"], prop)
-    num_updated_properties += 1
-  
+  for prop, is_updated in zillow.updatePropertiesWithZillowData(properties):
+    if is_updated:
+      fusion_tables.updateRow(prop["rowid"], prop)
+      num_updated_properties += 1
   print "%d properties updated." % num_updated_properties
  
 if __name__ == "__main__":

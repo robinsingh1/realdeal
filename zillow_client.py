@@ -87,7 +87,7 @@ class ZillowClient(object):
         rentzestimate=rentzestimate)
     return GetDeepSearchResults(deep_search_response)
         
-  def updatePropertiesWithZillowData(self, properties, yield_all=False):  
+  def updatePropertiesWithZillowData(self, properties):  
     for prop in properties:
       updated_prop = copy.deepcopy(prop)
       is_updated = False
@@ -95,19 +95,18 @@ class ZillowClient(object):
       logging.info("Updating: %s, %s, %s", 
                     prop["address"], prop["city"], prop["zip"])
       
-      if prop["address"] and prop["city"] and prop["zip"]:
-        try:
-          result = self.getDeepSearchResults(
-              address=prop["address"], 
-              citystatezip=prop["city"] + ", " + prop["zip"])
-        except ZillowError as e: 
-          logging.error("No Zillow data found for: %s, %s, %s", 
-                        prop["address"], prop["city"], prop["zip"])
-          logging.error("ZillowError: %s", e.message)
-          # Set invalid zillow-id if no exact match was found for input address
-          if e.status in [500, 501, 502, 503, 504, 506, 507, 508]:
-            result = GetDeepSearchResults(
-                data=ElementTree.fromstring(ZILLOW_NOT_FOUND_RESPONSE))
+      try:
+        result = self.getDeepSearchResults(
+            address=prop["address"], 
+            citystatezip=prop["city"] + ", " + prop["zip"])
+      except ZillowError as e: 
+        logging.error("No Zillow data found for: %s, %s, %s", 
+                      prop["address"], prop["city"], prop["zip"])
+        logging.error("ZillowError: %s", e.message)
+        # Set invalid zillow-id if no exact match was found for input address
+        if e.status in [500, 501, 502, 503, 504, 506, 507, 508]:
+          result = GetDeepSearchResults(
+              data=ElementTree.fromstring(ZILLOW_NOT_FOUND_RESPONSE))
 
       if result:
         for field in ZILLOW_FIELDS:
@@ -129,11 +128,9 @@ class ZillowClient(object):
             updated_prop[field] = new_value
             is_updated = True 
                 
-        if is_updated:
-          logging.info("Updating: %s", prop["address"])
-          updated_prop["last_update"] = strftime("%Y-%m-%d %H:%M:%S", localtime())
-          updated_prop["zillow_last_update"] = updated_prop["last_update"]
+      if is_updated:
+        logging.info("Updating: %s", prop["address"])
+        updated_prop["last_update"] = strftime("%Y-%m-%d %H:%M:%S", localtime())
+        updated_prop["zillow_last_update"] = updated_prop["last_update"]
       
-      
-      if is_updated or yield_all:
-        yield updated_prop
+      yield updated_prop, is_updated
