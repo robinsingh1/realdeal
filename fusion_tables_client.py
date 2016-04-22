@@ -32,8 +32,7 @@ def isRateLimitExceededException(exception):
 def isInternalErrorException(exception):
   """Return True if exception is a retryable internal error."""
   return (isinstance(exception, HttpError) and 
-          exception.resp.status == 503 and 
-          exception._get_reason().strip() == "Internal error. Please try again.")
+          exception.resp.status in [502, 503])
   
 def isRetryableException(exception):
   """Return True if exception is retryable."""
