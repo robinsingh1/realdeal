@@ -94,7 +94,7 @@ class CraigslistSpider(scrapy.Spider):
 #             import pdb; pdb.set_trace()
             #pre-processing for getting the price in the right format
             price = ''.join(temp.xpath("span")[2].xpath("span[@class='price']").xpath("text()").extract())
-            item["price"] = price.replace("$","")
+            item["price"] = float(price.replace("$",""))
             item["link"] = "http://sfbay.craigslist.org" + ''.join(info.xpath("a/@href").extract())
 
 
