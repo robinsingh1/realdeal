@@ -1,5 +1,10 @@
+STATUS
+=======
 
-scrapy
+https://travis-ci.org/pitzer/realdeal.svg?branch=master
+
+RUN
+=======
 
 scrapy crawl realtor
 scrapy crawl realtor -o properties.json
@@ -20,12 +25,6 @@ python realdeal_pipeline.py RealDealWorkflow --local-scheduler --epoch=
 # scrape rental properties from craigslist and upload to 
 # fusion tables
 python craigslist_rentals_pipeline.py CraigslistRentalsWorkflow --local-scheduler
-
-INSTALL
-=======
-
-pip install pyzillow
-pip install python-dateutil
 
 TOR
 ===
