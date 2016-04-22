@@ -14,7 +14,7 @@ from retrying import retry
 from time import localtime, strftime
 from xml.etree import cElementTree as ElementTree  # for zillow API
 
-from rate_limiter import RequestRateLimiter
+from realdeal.rate_limiter import RequestRateLimiter
 
 
 ZILLOW_RATE_LIMITER_FILE = "zillow_rate_limits.json"

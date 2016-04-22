@@ -11,7 +11,7 @@ import os
 import requests
 import urllib
 
-from rate_limiter import RequestRateLimiter
+from realdeal.rate_limiter import RequestRateLimiter
 from time import localtime, strftime
 
 REDFIN_FIELDS = [

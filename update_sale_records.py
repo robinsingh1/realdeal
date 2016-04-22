@@ -7,7 +7,7 @@ import csv
 import logging
 import time
 
-from redfin_client import RedfinClient
+from realdeal.redfin_client import RedfinClient
 
 FUSION_FIELS = [
       'status', 

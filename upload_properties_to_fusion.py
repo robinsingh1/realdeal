@@ -5,8 +5,8 @@ import json
 import logging
 import os
 
-from fusion_tables_client import FusionTablesClient
-from real_deal_batch_uploader import RealDealBatchUploader
+from realdeal.fusion_tables_client import FusionTablesClient
+from realdeal.real_deal_batch_uploader import RealDealBatchUploader
 
 
 if __name__ == "__main__":

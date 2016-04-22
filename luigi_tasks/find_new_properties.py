@@ -10,14 +10,14 @@ import luigi
 from time import localtime, strftime
 
 from luigi_tasks.base_task import RealDealBaseTask
-from fusion_tables_client import FusionTablesClient
+from realdeal.fusion_tables_client import FusionTablesClient
 
 
 class FindNewProperties(RealDealBaseTask):
   fusion_table_id = luigi.Parameter()
   key_columns = luigi.Parameter()
   
-  __cached_row_keys = set()
+  cached_row_keys = set()
   
   def output(self):
     return self.getLocalFileTarget("properties_new.json")
@@ -26,14 +26,14 @@ class FindNewProperties(RealDealBaseTask):
     client = FusionTablesClient(table_id=self.fusion_table_id)
     rows = client.getRows(columns=self.key_columns.split(","))
     for row in rows:
-      self.__cached_row_keys.add(self.rowKey(row))
+      self.cached_row_keys.add(self.rowKey(row))
   
   def rowKey(self, row):
     return ":".join([unicode(row.get(c)) for c in self.key_columns.split(",")])
   
   def propertyInFusionTable(self, prop):
     key = self.rowKey(prop)
-    return key in self.__cached_row_keys
+    return key in self.cached_row_keys
                     
   def run(self):
     with self.input().open() as fin, self.output().open('w') as fout:
@@ -46,7 +46,7 @@ class FindNewProperties(RealDealBaseTask):
           prop["created"] = strftime("%Y-%m-%d %H:%M:%S", localtime())
           prop["last_update"] = prop["created"]
           properties_out.append(prop)
-          self.__cached_row_keys.add(self.rowKey(prop))
+          self.cached_row_keys.add(self.rowKey(prop))
           
       json_str = "[%s]" % ",\n".join([json.dumps(p) for p in properties_out])
       fout.write(json_str)

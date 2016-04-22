@@ -7,8 +7,8 @@ Created on Mar 13, 2016
 import logging
 import os
 
-from fusion_tables_client import FusionTablesClient
-import mortgage
+from realdeal.fusion_tables_client import FusionTablesClient
+from realdeal import mortgage
 
 FUSION_FIELDS = [
   "rowid",

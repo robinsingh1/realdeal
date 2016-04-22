@@ -7,8 +7,8 @@ Created on Feb 17, 2016
 import logging
 import os
 
-from fusion_tables_client import FusionTablesClient
-from zillow_client import ZillowClient, ZILLOW_FIELDS
+from realdeal.fusion_tables_client import FusionTablesClient
+from realdeal.zillow_client import ZillowClient, ZILLOW_FIELDS
 
     
 def main():

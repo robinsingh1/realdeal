@@ -7,8 +7,8 @@ Created on Mar 13, 2016
 import logging
 import os
 
-from fusion_tables_client import FusionTablesClient
-from redfin_client import RedfinClient, REDFIN_FIELDS
+from realdeal.fusion_tables_client import FusionTablesClient
+from realdeal.redfin_client import RedfinClient, REDFIN_FIELDS
 
 __NEEDS_UPDATE_STATUS = [
   "",

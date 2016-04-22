@@ -7,7 +7,7 @@ Created on Feb 21, 2016
 import json
 import luigi
 
-from fusion_tables_client import FusionTablesClient
+from realdeal.fusion_tables_client import FusionTablesClient
 from luigi_tasks.base_task import RealDealBaseTask
 
 

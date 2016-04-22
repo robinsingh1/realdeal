@@ -7,7 +7,7 @@ Created on Mar 11, 2016
 import json
 
 from luigi_tasks.base_task import RealDealBaseTask
-from redfin_client import RedfinClient
+from realdeal.redfin_client import RedfinClient
 
 class UpdateRedfinData(RealDealBaseTask):
   

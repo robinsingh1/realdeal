@@ -7,7 +7,7 @@ Created on Mar 11, 2016
 import json
 
 from luigi_tasks.base_task import RealDealBaseTask
-import mortgage
+from realdeal import mortgage
 
 class UpdateMortageData(RealDealBaseTask):
   

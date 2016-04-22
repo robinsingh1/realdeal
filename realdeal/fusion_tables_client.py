@@ -13,7 +13,7 @@ from googleapiclient.errors import HttpError
 from oauth2client.client import SignedJwtAssertionCredentials
 from retrying import retry
 
-from rate_limiter import RequestRateLimiter
+from realdeal.rate_limiter import RequestRateLimiter
 
 FUSIONT_TABLES_SCOPE='https://www.googleapis.com/auth/fusiontables'
 QUOTA_MAX_REQUESTS = 200

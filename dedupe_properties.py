@@ -1,21 +1,28 @@
 #!/usr/bin/python
+import logging
 import os
 
-from fusion_tables_client import FusionTablesClient
+from realdeal.fusion_tables_client import FusionTablesClient
 
 
 if __name__ == "__main__":
-  client = FusionTablesClient(table_id=os.environ["REALDEAL_FUSION_TABLE_ID"])
-  rows = client.getRows(columns=["rowid", "zillow_id"], order_by="zillow_id")
+  logging.getLogger().setLevel(logging.INFO)
+  client = FusionTablesClient(table_id=os.environ["REALDEAL_RENTALS_TABLE_ID"])
+  rows = client.getRows(columns=["rowid", "craigslist_id"], order_by="created DESC")
   dupe_rowids = []
-  prev_zillow_id = ""
+  visited_ids = set()
+  
   for row in rows:
-    current_zillow_id = row["zillow_id"]
-    if current_zillow_id and current_zillow_id == prev_zillow_id:
+    current_id = row["craigslist_id"]
+    if not current_id:
+      continue
+    
+    if current_id in visited_ids:
       dupe_rowids.append(row["rowid"])
     else:
-      prev_zillow_id = current_zillow_id
+      visited_ids.add(current_id)
   
+  print "Removing %d dupes." % len(dupe_rowids)
   for rowid in dupe_rowids:
     client.deleteRow(rowid)  
   
