@@ -11,7 +11,6 @@ import time
 from luigi_tasks.base_task import RealDealBaseTask
 from luigi_tasks.scrape_realtor import ScrapeRealtor
 from luigi_tasks.find_new_properties import FindNewProperties
-# from luigi_tasks.update_redfin_data import UpdateRedfinData
 from luigi_tasks.update_mortage_data import UpdateMortageData
 from luigi_tasks.update_zillow_data import UpdateZillowData
 from luigi_tasks.upload_to_fusion_tables import UploadToFusionTables
@@ -39,10 +38,6 @@ class RealDealWorkflow(RealDealBaseTask):
         upstream_tasks=find_new_properties_task,
         base_dir=self.base_dir,
         epoch=self.epoch)
-#     get_redfin_data_task = UpdateRedfinData(
-#         upstream_tasks=get_mortgage_data_task,
-#         base_dir=self.base_dir,
-#         epoch=self.epoch)
     get_zillow_data_task = UpdateZillowData(
         upstream_tasks=get_mortgage_data_task,
         base_dir=self.base_dir,
