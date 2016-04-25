@@ -12,9 +12,6 @@ from real_scrapy.items import CraigslistItem
   
 class CraigslistSpider(scrapy.Spider):
     name = "craigslist"
-    debug = False
-    if not debug:
-      allowed_domains = ["craigslist.org"]
     
     locations = [
 #       "Alameda",
@@ -66,45 +63,28 @@ class CraigslistSpider(scrapy.Spider):
       # scrape first page
       location_url = base_url.format(location=urllib.quote_plus(l))
       start_urls.append(location_url)
-      # scrape subsequent pages
-#       for i in range(1, 5):
-#         start_urls.append(location_url + "&s=" + str(i) + "00")
     
-    if debug:
-      start_urls = [
-        "file:///Users/pitzer/Documents/workspace/realdeal/data/craigslist_rentals_hayward.html"
-      ]    
-
     def parse(self, response):
-#         with open('data/craigslist_rentals_hayward.html', 'wb') as f:
-#           f.write(response.body)
-
-        #find all postings
-        postings = response.xpath(".//p")
-        #loop through the postings
-        for i in range(0, len(postings)-1):
-#         for i in range(0, 4):
-            item = CraigslistItem()
-            #grab craiglist apartment listing ID
-            item["craigslist_id"] = int(''.join(postings[i].xpath("@data-pid").extract()))
-            temp = postings[i].xpath("span[@class='txt']")
-            info = temp.xpath("span[@class='pl']")
-            #title of posting
-            item["title"] = ''.join(info.xpath(".//span[@id='titletextonly']/text()").extract())
-#             import pdb; pdb.set_trace()
-            #pre-processing for getting the price in the right format
-            price = ''.join(temp.xpath("span")[2].xpath("span[@class='price']").xpath("text()").extract())
-            item["price"] = float(price.replace("$",""))
-            item["link"] = "http://sfbay.craigslist.org" + ''.join(info.xpath("a/@href").extract())
-
-
-            if self.debug:
-              item["link"] = 'file:///Users/pitzer/Documents/workspace/realdeal/data/craigslist_rentals_hayward_5530420563.html'
-           
-            #Parse request to follow the posting link into the actual post
-            request = scrapy.Request(item["link"] , callback=self.parse_item_page)
-            request.meta['item'] = item
-            yield request
+#         #find all postings
+      postings = response.xpath(".//p")
+      #loop through the postings
+      for i in range(0, len(postings)-1):
+          item = CraigslistItem()
+          #grab craiglist apartment listing ID
+          item["craigslist_id"] = int(''.join(postings[i].xpath("@data-pid").extract()))
+          temp = postings[i].xpath("span[@class='txt']")
+          info = temp.xpath("span[@class='pl']")
+          #title of posting
+          item["title"] = ''.join(info.xpath(".//span[@id='titletextonly']/text()").extract())
+          #pre-processing for getting the price in the right format
+          price = ''.join(temp.xpath("span")[2].xpath("span[@class='price']").xpath("text()").extract())
+          item["price"] = float(price.replace("$",""))
+          item["link"] = "http://sfbay.craigslist.org" + ''.join(info.xpath("a/@href").extract())
+        
+          #Parse request to follow the posting link into the actual post
+          request = scrapy.Request(item["link"] , callback=self.parse_item_page)
+          request.meta['item'] = item
+          yield request
 
     def isFloat(self, value):
       try:
@@ -131,12 +111,10 @@ class CraigslistSpider(scrapy.Spider):
         if longitude:
             item['longitude'] = float(longitude)
             
-        attr = response.xpath("//p[@class='attrgroup']")
-        
         
         # Extract bedrooms and bathrooms.
+        attr = response.xpath("//p[@class='attrgroup']")
         bed_bath_selector = attr.xpath("span/b/text()")
-#         import pdb; pdb.set_trace()
         if len(bed_bath_selector) > 0:
           bedrooms = bed_bath_selector[0].extract()
           if self.isInt(bedrooms):
