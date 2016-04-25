@@ -14,8 +14,9 @@ class TestRedfinClient(unittest.TestCase):
   
   @mock.patch.object(requests, 'get')
   def testGetSalesRecords(self, mock_requests):
-    
-    with open(os.path.join(os.path.dirname(__file__), 'gis_response.txt')) as f:
+    responses_dir = os.path.dirname(os.path.realpath(__file__))
+    file_path = os.path.join(responses_dir, 'responses/redfin_gis_response.txt')
+    with open(file_path) as f:
       response = mock.MagicMock() 
       response.content = f.read()
       mock_requests.return_value = response
