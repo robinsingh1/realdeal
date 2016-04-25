@@ -11,7 +11,7 @@ install:
 
 # command to run tests, e.g. python setup.py test
 script:
-  - py.test --flake  --cov-report term --cov realdeal test/
+  - py.test --flake  --cov-report term --cov realdeal tests/
 
 after_success:
   - coveralls
