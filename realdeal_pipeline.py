@@ -8,13 +8,13 @@ import luigi
 import os
 import time 
 
-from luigi_tasks.base_task import RealDealBaseTask
-from luigi_tasks.scrape_realtor import ScrapeRealtor
-from luigi_tasks.find_new_properties import FindNewProperties
-from luigi_tasks.update_mortage_data import UpdateMortageData
-from luigi_tasks.update_zillow_data import UpdateZillowData
-from luigi_tasks.upload_to_fusion_tables import UploadToFusionTables
-from luigi_tasks.email_deals import EmailDeals
+from realdeal.luigi.base_task import RealDealBaseTask
+from realdeal.luigi.scrape_realtor import ScrapeRealtor
+from realdeal.luigi.find_new_properties import FindNewProperties
+from realdeal.luigi.update_mortage_data import UpdateMortageData
+from realdeal.luigi.update_zillow_data import UpdateZillowData
+from realdeal.luigi.upload_to_fusion_tables import UploadToFusionTables
+from realdeal.luigi.email_deals import EmailDeals
 
 
 class RealDealWorkflow(RealDealBaseTask):

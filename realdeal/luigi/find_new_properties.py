@@ -9,7 +9,7 @@ import luigi
 
 from time import localtime, strftime
 
-from luigi_tasks.base_task import RealDealBaseTask
+from realdeal.luigi.base_task import RealDealBaseTask
 from realdeal.fusion_tables_client import FusionTablesClient
 
 

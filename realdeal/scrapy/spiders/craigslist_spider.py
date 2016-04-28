@@ -7,7 +7,7 @@ Created on Apr 9, 2016
 import scrapy
 import urllib
 
-from real_scrapy.items import CraigslistItem
+from realdeal.scrapy.items import CraigslistItem
 
   
 class CraigslistSpider(scrapy.Spider):

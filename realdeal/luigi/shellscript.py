@@ -16,7 +16,7 @@ import luigi
 import abc
 import subprocess 
 import logging
-from luigi_tasks import target_factory
+from realdeal.luigi import target_factory
 
 logger = logging.getLogger('luigi-interface')
 

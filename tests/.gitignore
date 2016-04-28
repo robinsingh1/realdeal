@@ -1,1 +1,3 @@
 /__pycache__/
+/.coverage
+/response_utils.pyc

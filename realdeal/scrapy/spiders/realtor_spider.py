@@ -7,7 +7,7 @@ Created on Feb 10, 2016
 
 import scrapy
 
-from real_scrapy.items import RealScrapyItem
+from realdeal.scrapy.items import RealScrapyItem
 
 
 class RealtorSpider(scrapy.Spider):
@@ -24,15 +24,10 @@ class RealtorSpider(scrapy.Spider):
     "http://www.realtor.com/realestateandhomes-search/Milpitas_CA/type-single-family-home/price-na-700000/shw-all?pgsz=500",
     "http://www.realtor.com/realestateandhomes-search/Berkeley_CA/type-single-family-home/price-na-700000/shw-all?pgsz=500",
     "http://www.realtor.com/realestateandhomes-search/Oakland_CA/type-single-family-home/price-na-700000/shw-all?pgsz=500",
-#     "file:///Users/pitzer/Documents/workspace/realdeal/realtor_east_palo_alto.html",
-#     "file:///Users/pitzer/Documents/workspace/realdeal/realtor_hayward.html",
-#     "file:///Users/pitzer/Documents/workspace/realdeal/realtor_san_jose.html",
   ]
 
   def parse(self, response):
-#     with open('scrape.html', 'wb') as f:
-#       f.write(response.body)
-    
+
     item_extractions = {
       "address": ".//span[not(@id)][not(@style)][contains(concat(' ',normalize-space(@class),' '),\" listing-street-address \")]/text()",
       "city": ".//span[not(@id)][not(@style)][contains(concat(' ',normalize-space(@class),' '),\" listing-city \")]/text()",

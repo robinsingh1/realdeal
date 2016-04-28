@@ -19,3 +19,4 @@
 /logging.conf
 /properties.json
 /.ipynb_checkpoints/
+/.coverage

@@ -1,17 +1,17 @@
 '''
-Created on Apr 10, 2016
+Created on Feb 21, 2016
 
 @author: pitzer
 '''
 
 import luigi
 
-from luigi_tasks.base_task import RealDealBaseTask
+from realdeal.luigi.base_task import RealDealBaseTask
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
-class ScrapeCraigslist(RealDealBaseTask):
-  spider = luigi.Parameter("craigslist")
+class ScrapeRealtor(RealDealBaseTask):
+  spider = luigi.Parameter("realtor")
   
   def output(self):
     return self.getLocalFileTarget("properties_scraped.json")

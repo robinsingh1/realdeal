@@ -7,7 +7,7 @@ Created on Feb 21, 2016
 import json
 import os
 
-from luigi_tasks.base_task import RealDealBaseTask
+from realdeal.luigi.base_task import RealDealBaseTask
 from realdeal.zillow_client import ZillowClient
 
 class UpdateZillowData(RealDealBaseTask):

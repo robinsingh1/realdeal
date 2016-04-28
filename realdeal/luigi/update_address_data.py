@@ -9,7 +9,7 @@ Created on Apr 10, 2016
 import json
 
 from geopy.geocoders import Nominatim
-from luigi_tasks.base_task import RealDealBaseTask
+from realdeal.luigi.base_task import RealDealBaseTask
 from retrying import retry
 
 

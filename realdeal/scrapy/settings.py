@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for real_scrapy project
+# Scrapy settings for scrapy project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,14 +9,14 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'real_scrapy'
+BOT_NAME = 'scrapy'
 
-SPIDER_MODULES = ['real_scrapy.spiders']
-NEWSPIDER_MODULE = 'real_scrapy.spiders'
+SPIDER_MODULES = ['realdeal.scrapy.spiders']
+NEWSPIDER_MODULE = 'realdeal.scrapy.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'real_scrapy (+http://www.yourdomain.com)'
+#USER_AGENT = 'scrapy (+http://www.yourdomain.com)'
 USER_AGENT_LIST = [
   'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.36 Safari/535.7',
   'Mozilla/5.0 (Windows NT 6.2; Win64; x64; rv:16.0) Gecko/16.0 Firefox/16.0',
@@ -50,16 +50,16 @@ COOKIES_ENABLED=False
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'real_scrapy.middlewares.MyCustomSpiderMiddleware': 543,
+#    'scrapy.middlewares.MyCustomSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-     'real_scrapy.middlewares.RandomUserAgentMiddleware': 400,
+     'realdeal.scrapy.middlewares.RandomUserAgentMiddleware': 400,
      'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': None,
-#      'real_scrapy.middlewares.ProxyMiddleware': 410,
-#      'real_scrapy.middlewares.RetryChangeProxyMiddleware': 600,               
+#      'scrapy.middlewares.ProxyMiddleware': 410,
+#      'scrapy.middlewares.RetryChangeProxyMiddleware': 600,               
     # Disable compression middleware, so the actual HTML pages are cached
 }
 
@@ -72,7 +72,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    'real_scrapy.pipelines.SomePipeline': 300,
+#    'scrapy.pipelines.SomePipeline': 300,
 #}
 
 # Enable and configure the AutoThrottle extension (disabled by default)

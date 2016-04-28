@@ -8,7 +8,7 @@ import locale
 import os
 
 from realdeal.email_message import EmailClient
-from luigi_tasks.base_task import RealDealBaseTask
+from realdeal.luigi.base_task import RealDealBaseTask
 
 PROPERTY_TABLE_FIELDS = [
   'address',

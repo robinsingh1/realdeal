@@ -8,7 +8,7 @@ import json
 import luigi
 
 from realdeal.fusion_tables_client import FusionTablesClient
-from luigi_tasks.base_task import RealDealBaseTask
+from realdeal.luigi.base_task import RealDealBaseTask
 
 
 class UploadToFusionTables(RealDealBaseTask):

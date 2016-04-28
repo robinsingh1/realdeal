@@ -8,11 +8,11 @@ import luigi
 import os
 import time 
 
-from luigi_tasks.base_task import RealDealBaseTask
-from luigi_tasks.scrape_craigslist import ScrapeCraigslist
-from luigi_tasks.find_new_properties import FindNewProperties
-from luigi_tasks.update_address_data import UpdateAddressData
-from luigi_tasks.upload_to_fusion_tables import UploadToFusionTables
+from realdeal.luigi.base_task import RealDealBaseTask
+from realdeal.luigi.scrape_craigslist import ScrapeCraigslist
+from realdeal.luigi.find_new_properties import FindNewProperties
+from realdeal.luigi.update_address_data import UpdateAddressData
+from realdeal.luigi.upload_to_fusion_tables import UploadToFusionTables
 
 
 class CraigslistRentalsWorkflow(RealDealBaseTask):

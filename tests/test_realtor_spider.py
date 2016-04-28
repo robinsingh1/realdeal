@@ -6,7 +6,7 @@ Created on Apr 24, 2016
 import unittest
 
 from response_utils import fake_response_from_file
-from real_scrapy.spiders.realtor_spider import RealtorSpider
+from realdeal.scrapy.spiders.realtor_spider import RealtorSpider
 
   
 class CraigslistSpiderTest(unittest.TestCase):
