@@ -16,7 +16,7 @@ from realdeal.luigi.upload_to_fusion_tables import UploadToFusionTables
 
 
 class CraigslistRentalsWorkflow(RealDealBaseTask):
-  base_dir = luigi.Parameter(os.path.join(os.getcwd(), "data", "craigslist_rentals"))
+  base_dir = luigi.Parameter(os.path.join(os.getcwd(), "data", "craigslist"))
   epoch = luigi.Parameter(time.strftime("%Y%m%d-%H%M%S", time.localtime()))
   fusion_table_id = luigi.Parameter(os.environ["REALDEAL_RENTALS_TABLE_ID"])
   

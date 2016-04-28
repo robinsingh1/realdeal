@@ -18,7 +18,7 @@ from realdeal.luigi.email_deals import EmailDeals
 
 
 class RealDealWorkflow(RealDealBaseTask):
-  base_dir = luigi.Parameter(os.path.join(os.getcwd(), "data"))
+  base_dir = luigi.Parameter(os.path.join(os.getcwd(), "data", "realtor"))
   epoch = luigi.Parameter(
     time.strftime("%Y%m%d-%H%M%S", time.localtime()))
   
