@@ -65,7 +65,7 @@ class CraigslistSpider(scrapy.Spider):
       start_urls.append(location_url)
     
     def parse(self, response):
-#         #find all postings
+#     #find all postings
       postings = response.xpath(".//p")
       #loop through the postings
       for i in range(0, len(postings)-1):
@@ -77,7 +77,7 @@ class CraigslistSpider(scrapy.Spider):
           #title of posting
           item["title"] = ''.join(info.xpath(".//span[@id='titletextonly']/text()").extract())
           #pre-processing for getting the price in the right format
-          price = ''.join(temp.xpath("span")[2].xpath("span[@class='price']").xpath("text()").extract())
+          price = ''.join(temp.xpath(".//span[@class='price']/text()").extract())
           item["price"] = float(price.replace("$",""))
           item["link"] = "http://sfbay.craigslist.org" + ''.join(info.xpath("a/@href").extract())
         
