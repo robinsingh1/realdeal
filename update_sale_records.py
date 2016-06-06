@@ -83,14 +83,14 @@ def main():
   for region in REGIONS:
     properties = redfin.getSalesRecords(region_id=region)
     properties_all += properties
-    with open('sale_records_%d.csv' % region, 'w') as f:
+    with open('sales_records_%d.csv' % region, 'w') as f:
       dict_writer = csv.DictWriter(f, FUSION_FIELS)
       dict_writer.writeheader()
       dict_writer.writerows(properties)
       print "region: %d, # properties: %d" % (region, len(properties))
     time.sleep(5)
     
-  with open('sale_records_all.csv', 'w') as f:
+  with open('sales_records_all.csv', 'w') as f:
     dict_writer = csv.DictWriter(f, FUSION_FIELS)
     dict_writer.writeheader()
     dict_writer.writerows(properties_all)
