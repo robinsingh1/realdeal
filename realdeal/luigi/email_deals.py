@@ -5,6 +5,7 @@ Created on Apr 19, 2016
 '''
 import json
 import locale
+import luigi
 import os
 
 from realdeal.email_message import EmailClient
@@ -34,12 +35,12 @@ PROPERTY_TABLE_FIELD_TYPES = [
   'link',                 
 ]
 
-EMAIL_TO = "realdeal-bay-area@googlegroups.com"
 EMAIL_FROM = "ben.pitzer@gmail.com"                 
 
 locale.setlocale( locale.LC_ALL, '' )
 
 class EmailDeals(RealDealBaseTask):
+  email_to = luigi.Parameter()
   
   def output(self):
     return self.getLocalFileTarget("properties_emailed.json")
@@ -106,7 +107,7 @@ class EmailDeals(RealDealBaseTask):
       html += "</div>\n"
 
       subject = "Found %d new properties" % len(properties)
-      client.send(EMAIL_TO, subject, html, EMAIL_FROM)
+      client.send(self.email_to, subject, html, EMAIL_FROM)
       
       json_str = "[%s]" % ",\n".join([json.dumps(p) for p in properties])
       fout.write(json_str)
