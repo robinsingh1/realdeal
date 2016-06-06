@@ -15,20 +15,17 @@ class CraigslistSpiderTest(unittest.TestCase):
     self.spider = RealtorSpider()
 
   def test_parse(self):
-    response = fake_response_from_file(
-        'responses/realtor_hayward.html')
-    results = self.spider.parse(response)
+    response = fake_response_from_file('responses/realtor_hayward.html')
+    results = list(self.spider.parse(response))
     
-    count = 0
-    for item in results:
-      self.assertIsNotNone(item['address'])
-      self.assertIsNotNone(item['city'])
-      self.assertIsNotNone(item['state'])
-      self.assertIsNotNone(item['zip'])
-      self.assertIsNotNone(item['purchase_price'])
-      self.assertIsNotNone(item['bedrooms'])
-      self.assertIsNotNone(item['bathrooms'])
-      self.assertIsNotNone(item['building_size'])
-      count += 1
-    self.assertEqual(count, 47)
+    item = results[0]
+    self.assertIsNotNone(item['address'])
+    self.assertIsNotNone(item['city'])
+    self.assertIsNotNone(item['state'])
+    self.assertIsNotNone(item['zip'])
+    self.assertIsNotNone(item['purchase_price'])
+    self.assertIsNotNone(item['bedrooms'])
+    self.assertIsNotNone(item['bathrooms'])
+    self.assertIsNotNone(item['building_size'])
+    self.assertEqual(len(results), 47)
     
