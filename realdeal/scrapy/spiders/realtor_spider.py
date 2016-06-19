@@ -17,16 +17,16 @@ class RealtorSpider(scrapy.Spider):
   allowed_domains = ["realtor.com"]
   
   locations = [
-#     "Menlo-Park_CA",
-#     "Redwood-City_CA",
-#     "San-Jose_CA",
-#     "East-Palo-Alto_CA",
-#     "Hayward_CA",
-#     "Fremont_CA",
-#     "Union-City_CA",
+    "Menlo-Park_CA",
+    "Redwood-City_CA",
+    "San-Jose_CA",
+    "East-Palo-Alto_CA",
+    "Hayward_CA",
+    "Fremont_CA",
+    "Union-City_CA",
     "Milpitas_CA",
-#     "Berkeley_CA",
-#     "Oakland_CA",
+    "Berkeley_CA",
+    "Oakland_CA",
   ]  
   base_url = os.getenv("REALTOR_SPIDER_BASE_URL", "")
   start_urls = []
