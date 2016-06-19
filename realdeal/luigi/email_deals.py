@@ -5,6 +5,7 @@ Created on Apr 19, 2016
 '''
 import json
 import locale
+import logging
 import luigi
 import os
 
@@ -40,7 +41,6 @@ EMAIL_FROM = "ben.pitzer@gmail.com"
 locale.setlocale( locale.LC_ALL, '' )
 
 class EmailDeals(RealDealBaseTask):
-  email_to = luigi.Parameter()
   
   def output(self):
     return self.getLocalFileTarget("properties_emailed.json")
@@ -91,24 +91,39 @@ class EmailDeals(RealDealBaseTask):
     return html
                  
   def run(self):
-    client = EmailClient(os.environ["REALDEAL_SENDGRID_API_KEY"])
-
+    api_key = os.getenv("REALDEAL_SENDGRID_API_KEY")
+    if not api_key:
+      logging.error("REALDEAL_SENDGRID_API_KEY not set. Skipping email.")
+      return
+    email_to = os.getenv("REALDEAL_EMAIL_LIST")
+    if not email_to:
+      logging.error("REALDEAL_EMAIL_LIST not set. Skipping email.")
+      return
+    subject_template = os.getenv("REALDEAL_EMAIL_SUBJECT", "")
+    if not subject_template:
+      logging.warning("REALDEAL_EMAIL_SUBJECT not set.")
+    
+    client = EmailClient(sendgrid_api_key=api_key)
     with self.input().open() as fin, self.output().open('w') as fout:
       properties = json.load(fin)
       
-      html = ""
-      html += "<div>\n"
-      html += "Hello, I found the following properties for you:"
-      html += "</div>\n"
-      html += "<div>\n"
-      html += self.createPropertyTable(properties, 
-                                       PROPERTY_TABLE_FIELDS,
-                                       PROPERTY_TABLE_FIELD_TYPES)
-      html += "</div>\n"
-
-      subject = "Found %d new properties" % len(properties)
-      client.send(self.email_to, subject, html, EMAIL_FROM)
-      
-      json_str = "[%s]" % ",\n".join([json.dumps(p) for p in properties])
-      fout.write(json_str)
-      print "%d properties emailed." % len(properties)
+      if properties:
+        html = ""
+        html += "<div>\n"
+        html += "Hello, I found the following properties for you:"
+        html += "</div>\n"
+        html += "<div>\n"
+        html += self.createPropertyTable(properties, 
+                                         PROPERTY_TABLE_FIELDS,
+                                         PROPERTY_TABLE_FIELD_TYPES)
+        html += "</div>\n"
+  
+        subject = subject_template.format(num_properties=len(properties))
+        client.send(email_to, subject, html, EMAIL_FROM)
+        
+        json_str = "[%s]" % ",\n".join([json.dumps(p) for p in properties])
+        fout.write(json_str)
+        logging.info("%d properties emailed." % len(properties))
+      else:
+        logging.info("No properties found. Skipping email.")
+    

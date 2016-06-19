@@ -23,7 +23,6 @@ class RealDealWorkflow(RealDealBaseTask):
     time.strftime("%Y%m%d-%H%M%S", time.localtime()))
   
   fusion_table_id = luigi.Parameter(os.environ["REALDEAL_FUSION_TABLE_ID"])
-  email_list = luigi.Parameter(os.getenv("REALDEAL_EMAIL_LIST", ""))
   
   def requires(self):
     scrape_realtor_task = ScrapeRealtor(
@@ -48,16 +47,12 @@ class RealDealWorkflow(RealDealBaseTask):
         base_dir=self.base_dir,
         epoch=self.epoch,
         fusion_table_id = self.fusion_table_id)
-    if self.email_list:
-      email_task = EmailDeals(
-          upstream_tasks=upload_to_fusion_tables_task,
-          base_dir=self.base_dir,
-          epoch=self.epoch,
-          email_to=self.email_list)
-      return email_task
-    else:
-      return upload_to_fusion_tables_task
-  
+    email_task = EmailDeals(
+        upstream_tasks=upload_to_fusion_tables_task,
+        base_dir=self.base_dir,
+        epoch=self.epoch)
+    return email_task
+
   def output(self):
     return self.getLocalFileTarget("workflow_complete")
   
