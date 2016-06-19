@@ -80,6 +80,7 @@ class FusionTablesClient(object):
   
   def dictValuePad(self, value):
     uvalue = unicode(value) 
+    uvalue = uvalue.replace("\\", "\\\\")
     uvalue = uvalue.replace("'", r"\'")
     return "'" + uvalue + "'"
   
@@ -145,6 +146,7 @@ class FusionTablesClient(object):
       sql += ", ".join(map(self.dictValuePad, row.values()))
       sql += ");"
     logging.info("INSERT ROWS: %s", sql)
+    import pdb; pdb.set_trace()
     response = self.executeWriteQuery(sql, multiplier=REQUESTS_PER_WRITE*len(rows))
     return self.flattenRowColumnData(response)
   
