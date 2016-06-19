@@ -21,7 +21,7 @@ QUOTA_TIME_INTERVAL = 100
 REQUESTS_PER_WRITE = 5
 REQUESTS_PER_READ = 1
 RATE_LIMITER_FILE = "fusion_tables_rate_limits.json"
-MAX_CONCURRENT_INSERTS = 3
+MAX_CONCURRENT_INSERTS = 1
 
 def isRateLimitExceededException(exception):
   """Return True if exception is a rate limit exceeded error."""

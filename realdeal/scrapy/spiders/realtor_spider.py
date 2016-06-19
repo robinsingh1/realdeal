@@ -17,16 +17,16 @@ class RealtorSpider(scrapy.Spider):
   allowed_domains = ["realtor.com"]
   
   locations = [
-    "Menlo-Park_CA",
-    "Redwood-City_CA",
-    "San-Jose_CA",
-    "East-Palo-Alto_CA",
-    "Hayward_CA",
-    "Fremont_CA",
-    "Union-City_CA",
+#     "Menlo-Park_CA",
+#     "Redwood-City_CA",
+#     "San-Jose_CA",
+#     "East-Palo-Alto_CA",
+#     "Hayward_CA",
+#     "Fremont_CA",
+#     "Union-City_CA",
     "Milpitas_CA",
-    "Berkeley_CA",
-    "Oakland_CA",
+#     "Berkeley_CA",
+#     "Oakland_CA",
   ]  
   base_url = os.getenv("REALTOR_SPIDER_BASE_URL", "")
   start_urls = []
@@ -49,7 +49,7 @@ class RealtorSpider(scrapy.Spider):
       "lot_size": ".//li[@data-label='property-meta-lotsize']/span[@class='data-value']/text()",
       "image": ".//img[@style][notw(@id)][contains(concat(' ',normalize-space(@class),' '),\" js-srp-listing-photos \")]/text()",
     }
-    required_fields = ["address", "city", "state", "zip"]
+    required_fields = ["address", "city", "state", "zip", "purchase_price"]
   
     for itemscope in response.xpath('//div[@itemscope]'):
       itemtype = itemscope.xpath('@itemtype')[0].extract()
@@ -65,6 +65,8 @@ class RealtorSpider(scrapy.Spider):
         extraction_selector = itemscope.xpath(extraction_xpath)
         if extraction_selector:
           extracted_value = extraction_selector[0].extract().strip()
+          if not extracted_value:
+            continue
           if extraction in ["bedrooms", "building_size"]:
             extracted_value = int(extracted_value.replace(",", ""))
           if extraction in ["lot_size"]:
