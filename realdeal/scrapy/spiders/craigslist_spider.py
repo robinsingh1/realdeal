@@ -4,6 +4,7 @@ Created on Apr 9, 2016
 @author: pitzer
 '''
 
+import os
 import scrapy
 import urllib
 
@@ -57,7 +58,7 @@ class CraigslistSpider(scrapy.Spider):
       "Union City",
 #       "Woodside",
     ]
-    base_url = "https://sfbay.craigslist.org/search/apa?query={location}&bedrooms=1&housing_type=6"
+    base_url = os.getenv("CRAIGSLIST_SPIDER_BASE_URL", "")
     start_urls = []
     for l in locations:
       # scrape first page
