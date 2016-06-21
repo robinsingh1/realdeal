@@ -9,5 +9,5 @@ export REALTOR_SPIDER_BASE_URL="http://www.realtor.com/realestateandhomes-search
 export CRAIGSLIST_SPIDER_BASE_URL="https://sfbay.craigslist.org/search/apa?query={location}&bedrooms=1&bedrooms=2&housing_type=1&housing_type=4"
 
 
-# python realtor_pipeline.py RealDealWorkflow --local-scheduler
+python realtor_pipeline.py RealDealWorkflow --local-scheduler
 python craigslist_pipeline.py CraigslistRentalsWorkflow --local-scheduler
