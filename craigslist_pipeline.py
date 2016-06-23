@@ -49,5 +49,5 @@ class CraigslistRentalsWorkflow(RealDealBaseTask):
       outfile.write('OK')
  
 if __name__ == '__main__':
-  logging.getLogger().setLevel(logging.INFO)
+#   logging.getLogger().setLevel(logging.INFO)
   luigi.run()
