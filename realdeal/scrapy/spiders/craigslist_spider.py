@@ -76,7 +76,7 @@ class CraigslistSpider(scrapy.Spider):
           temp = postings[i].xpath("span[@class='txt']")
           info = temp.xpath("span[@class='pl']")
           #title of posting
-          item["title"] = ''.join(info.xpath(".//span[@id='titletextonly']/text()").extract())
+          item["title"] = ''.join(info.xpath(".//a[@class='hdrlnk']/text()").extract())
           #pre-processing for getting the price in the right format
           price = ''.join(temp.xpath(".//span[@class='price']/text()").extract())
           if not price:
@@ -114,24 +114,24 @@ class CraigslistSpider(scrapy.Spider):
         if longitude:
             item['longitude'] = float(longitude)
             
-        
+        # import pdb; pdb.set_trace()
         # Extract bedrooms and bathrooms.
         attr = response.xpath("//p[@class='attrgroup']")
-        bed_bath_selector = attr.xpath("span/b/text()")
-        if len(bed_bath_selector) > 0:
-          bedrooms = bed_bath_selector[0].extract()
+        attr_selector = attr.xpath("span/b/text()")
+        if len(attr_selector) > 0:
+          bedrooms = attr_selector[0].extract()
+          bedrooms = bedrooms.replace("BR", "")
           if self.isInt(bedrooms):
             item["bedrooms"] = int(bedrooms)
-        if len(bed_bath_selector) > 1:
-          bathrooms = bed_bath_selector[1].extract()
+        if len(attr_selector) > 1:
+          bathrooms = attr_selector[1].extract()
+          bathrooms = bedrooms.replace("Ba", "")
           if self.isFloat(bathrooms):
               item["bathrooms"] = float(bathrooms)
-                
-        # Extract the building size.
-        building_size_selector = attr.xpath("span")
-        if len(building_size_selector) > 1:
-          building_size = ''.join(building_size_selector[1].xpath("b/text()").extract())
-          if(building_size.isdigit()):
+        if len(attr_selector) > 2:        
+          # Extract the building size.
+          building_size = attr_selector[2].extract()
+          if self.isInt(building_size):
             item["building_size"] = int(building_size)
         
         # Extract the posting date.

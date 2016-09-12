@@ -45,7 +45,11 @@ To have launchd start polipo at login:
   ln -sfv /usr/local/opt/polipo/*.plist ~/Library/LaunchAgents
 Then to load polipo now:
   launchctl load ~/Library/LaunchAgents/homebrew.mxcl.polipo.plist
-  
+
+TEST
+===
+
+py.test
   
 
  
