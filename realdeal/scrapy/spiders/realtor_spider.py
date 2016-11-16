@@ -19,14 +19,16 @@ class RealtorSpider(scrapy.Spider):
   locations = [
     "Menlo-Park_CA",
     "Redwood-City_CA",
-    "San-Jose_CA",
+    # "San-Jose_CA",
     "East-Palo-Alto_CA",
-    "Hayward_CA",
-    "Fremont_CA",
-    "Union-City_CA",
-    "Milpitas_CA",
-    "Berkeley_CA",
-    "Oakland_CA",
+    # "Hayward_CA",
+    # "Fremont_CA",
+    # "Union-City_CA",
+    # "Milpitas_CA",
+    "Mountain-View_CA",
+    "Sunnyvale_CA",
+    # "Berkeley_CA",
+    # "Oakland_CA",
   ]  
   base_url = os.getenv("REALTOR_SPIDER_BASE_URL", "")
   start_urls = []
