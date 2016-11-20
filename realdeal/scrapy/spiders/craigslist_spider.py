@@ -72,21 +72,21 @@ class CraigslistSpider(scrapy.Spider):
       for i in range(0, len(postings)-1):
           item = CraigslistItem()
           #grab craiglist apartment listing ID
-          item["craigslist_id"] = int(''.join(postings[i].xpath("@data-pid").extract()))
-          temp = postings[i].xpath("span[@class='txt']")
-          info = temp.xpath("span[@class='pl']")
+          
+          item["craigslist_id"] = int(''.join(postings[i].xpath(".//@data-pid").extract()))
           #title of posting
-          item["title"] = ''.join(info.xpath(".//a[@class='hdrlnk']/text()").extract())
+          item["title"] = ''.join(postings[i].xpath(".//a[@class='result-title hdrlnk']/text()").extract())
           #pre-processing for getting the price in the right format
-          price = ''.join(temp.xpath(".//span[@class='price']/text()").extract())
+          price = ''.join(postings[i].xpath(".//span[@class='result-price']/text()").extract())
           if not price:
             continue
           item["price"] = float(price.replace("$",""))
-          item["link"] = "http://sfbay.craigslist.org" + ''.join(info.xpath("a/@href").extract())
+          item["link"] = "http://sfbay.craigslist.org" + ''.join(postings[i].xpath(".//a[@class='result-title hdrlnk']/@href").extract())
         
           #Parse request to follow the posting link into the actual post
           request = scrapy.Request(item["link"] , callback=self.parse_item_page)
           request.meta['item'] = item
+          # import pdb; pdb.set_trace()
           yield request
 
     def isFloat(self, value):
