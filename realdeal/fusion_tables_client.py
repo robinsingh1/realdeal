@@ -5,12 +5,14 @@ Created on Feb 15, 2016
 '''
 
 import httplib2
+import json
 import logging
 import os 
 
 from apiclient.discovery import build
 from googleapiclient.errors import HttpError
-from oauth2client.client import SignedJwtAssertionCredentials
+# from oauth2client.client import SignedJwtAssertionCredentials
+from oauth2client.service_account import ServiceAccountCredentials
 from retrying import retry
 
 from realdeal.rate_limiter import RequestRateLimiter
@@ -47,11 +49,11 @@ class FusionTablesClient(object):
   
   def __init__(self, table_id,
                service_account=os.environ["REALDEAL_SERVICE_ACCOUNT"], 
-               private_key=os.environ["REALDEAL_PRIVATE_KEY"]):
+               json_keyfile_string=os.environ["REALDEAL_KEYFILE_JSON"]):
     self.table_id = table_id
-    self.credentials = SignedJwtAssertionCredentials(service_account, 
-                                                     private_key, 
-                                                     FUSIONT_TABLES_SCOPE)
+    keyfile_dict = json.loads(json_keyfile_string)
+    self.credentials = ServiceAccountCredentials.from_json_keyfile_dict(
+        keyfile_dict, [FUSIONT_TABLES_SCOPE])
     http = httplib2.Http()
     self.credentials.authorize(http)
     self.service = build('fusiontables', 'v2', http=http)
